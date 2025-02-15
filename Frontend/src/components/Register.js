@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth } from '../context/AuthContext';
-=======
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
 const AuthContainer = styled.div`
   max-width: 400px;
@@ -145,7 +140,6 @@ const LoginLink = styled.p`
   }
 `;
 
-<<<<<<< HEAD
 const ErrorMessage = styled.div`
   color: #dc2626;
   background: #fee2e2;
@@ -289,129 +283,6 @@ const Register = () => {
       </LoginLink>
     </AuthContainer>
   );
-=======
-const Register = () => {
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        agreeToTerms: false
-    });
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Add form submission logic here
-        console.log('Form submitted:', formData);
-    };
-
-    return (
-        <AuthContainer>
-            <Title>Create Account</Title>
-            <Subtitle>Join our community of creators</Subtitle>
-
-            <SocialLogin>
-                <SocialButton>Continue with Google</SocialButton>
-                <SocialButton>Continue with GitHub</SocialButton>
-            </SocialLogin>
-
-            <Divider>or</Divider>
-
-            <form onSubmit={handleSubmit}>
-                <FormGrid>
-                    <FormGroup>
-                        <label htmlFor="firstName">First Name</label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <label htmlFor="lastName">Last Name</label>
-                        <input
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </FormGroup>
-                </FormGrid>
-
-                <FormGroup>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-
-                <FormGroup>
-                    <label htmlFor="confirmPassword">Confirm Password</label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-
-                <FormGroup className="checkbox">
-                    <input
-                        type="checkbox"
-                        id="agreeToTerms"
-                        name="agreeToTerms"
-                        checked={formData.agreeToTerms}
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="agreeToTerms">
-                        I agree to the <Link to="/terms">Terms of Service</Link> and{' '}
-                        <Link to="/privacy">Privacy Policy</Link>
-                    </label>
-                </FormGroup>
-
-                <SubmitButton type="submit">Create Account</SubmitButton>
-            </form>
-
-            <LoginLink>
-                Already have an account? <Link to="/login">Log in</Link>
-            </LoginLink>
-        </AuthContainer>
-    );
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 };
 
 export default Register; 
