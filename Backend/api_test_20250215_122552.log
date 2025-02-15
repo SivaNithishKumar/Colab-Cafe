@@ -1,0 +1,321 @@
+2025-02-15 12:25:52,292 - INFO - 
+=== Starting API Tests ===
+
+2025-02-15 12:25:52,293 - INFO - 
+=== Running Test: Health Check ===
+2025-02-15 12:25:52,293 - INFO - 
+Request:
+2025-02-15 12:25:52,293 - INFO - Method: GET
+2025-02-15 12:25:52,294 - INFO - URL: http://localhost:3000/health
+2025-02-15 12:25:52,313 - INFO - 
+Response:
+2025-02-15 12:25:52,314 - INFO - Status Code: 200
+2025-02-15 12:25:52,315 - INFO - Body: {
+  "status": "OK"
+}
+2025-02-15 12:25:53,322 - INFO - 
+=== Running Test: Registration ===
+2025-02-15 12:25:53,323 - INFO - 
+Request:
+2025-02-15 12:25:53,325 - INFO - Method: POST
+2025-02-15 12:25:53,325 - INFO - URL: http://localhost:3000/api/auth/register
+2025-02-15 12:25:53,327 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:25:53,328 - INFO - Data: {
+  "email": "test_20250215122552@example.com",
+  "password": "password123",
+  "username": "testuser_20250215122552"
+}
+2025-02-15 12:25:53,653 - INFO - 
+Response:
+2025-02-15 12:25:53,654 - INFO - Status Code: 201
+2025-02-15 12:25:53,655 - INFO - Body: {
+  "user": {
+    "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+    "role": "user",
+    "isActive": true,
+    "email": "test_20250215122552@example.com",
+    "password": "$2a$10$0htLWjVnf3BE2KpB4/0oKeDt2QPXyJd.fJkHIPDejFclxpI2xdeDq",
+    "username": "testuser_20250215122552",
+    "updatedAt": "2025-02-15T06:55:53.357Z",
+    "createdAt": "2025-02-15T06:55:53.357Z",
+    "bio": null,
+    "avatar": null
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTUzLCJleHAiOjE3Mzk2ODg5NTN9.UYGoNtv1Hd1n7k7Un-03_FM33ncbErSo3_1mzHuJQdE"
+}
+2025-02-15 12:25:54,661 - INFO - 
+=== Running Test: Login ===
+2025-02-15 12:25:54,661 - INFO - 
+Request:
+2025-02-15 12:25:54,663 - INFO - Method: POST
+2025-02-15 12:25:54,663 - INFO - URL: http://localhost:3000/api/auth/login
+2025-02-15 12:25:54,664 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:25:54,664 - INFO - Data: {
+  "email": "test_20250215122552@example.com",
+  "password": "password123"
+}
+2025-02-15 12:25:54,808 - INFO - 
+Response:
+2025-02-15 12:25:54,808 - INFO - Status Code: 200
+2025-02-15 12:25:54,809 - INFO - Body: {
+  "user": {
+    "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+    "username": "testuser_20250215122552",
+    "email": "test_20250215122552@example.com",
+    "password": "$2a$10$0htLWjVnf3BE2KpB4/0oKeDt2QPXyJd.fJkHIPDejFclxpI2xdeDq",
+    "role": "user",
+    "bio": null,
+    "avatar": null,
+    "isActive": true,
+    "createdAt": "2025-02-15T06:55:53.357Z",
+    "updatedAt": "2025-02-15T06:55:53.357Z"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:55,813 - INFO - 
+=== Running Test: Create Project ===
+2025-02-15 12:25:55,814 - INFO - 
+Request:
+2025-02-15 12:25:55,815 - INFO - Method: POST
+2025-02-15 12:25:55,816 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:25:55,816 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:55,817 - INFO - Data: {
+  "title": "Test Project",
+  "description": "This is a test project",
+  "status": "active"
+}
+2025-02-15 12:25:55,852 - INFO - 
+Response:
+2025-02-15 12:25:55,853 - INFO - Status Code: 201
+2025-02-15 12:25:55,853 - INFO - Body: {
+  "id": "798c5583-9246-4bbb-9540-d19082fe5e57",
+  "title": "Test Project",
+  "description": "This is a test project",
+  "status": "active",
+  "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+  "createdAt": "2025-02-15T06:55:55.830Z",
+  "updatedAt": "2025-02-15T06:55:55.830Z",
+  "User": {
+    "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+    "username": "testuser_20250215122552",
+    "avatar": null
+  }
+}
+2025-02-15 12:25:56,859 - INFO - 
+=== Running Test: Get Projects ===
+2025-02-15 12:25:56,860 - INFO - 
+Request:
+2025-02-15 12:25:56,861 - INFO - Method: GET
+2025-02-15 12:25:56,861 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:25:56,862 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:56,891 - INFO - 
+Response:
+2025-02-15 12:25:56,892 - INFO - Status Code: 200
+2025-02-15 12:25:56,892 - INFO - Body: {
+  "projects": [
+    {
+      "id": "798c5583-9246-4bbb-9540-d19082fe5e57",
+      "title": "Test Project",
+      "description": "This is a test project",
+      "status": "active",
+      "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+      "createdAt": "2025-02-15T06:55:55.830Z",
+      "updatedAt": "2025-02-15T06:55:55.830Z",
+      "User": {
+        "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+        "username": "testuser_20250215122552",
+        "avatar": null
+      }
+    }
+  ],
+  "pagination": {
+    "total": 1,
+    "page": 1,
+    "totalPages": 1
+  }
+}
+2025-02-15 12:25:57,900 - INFO - 
+=== Running Test: Get Project ===
+2025-02-15 12:25:57,901 - INFO - 
+Request:
+2025-02-15 12:25:57,901 - INFO - Method: GET
+2025-02-15 12:25:57,902 - INFO - URL: http://localhost:3000/api/projects/798c5583-9246-4bbb-9540-d19082fe5e57
+2025-02-15 12:25:57,902 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:57,927 - INFO - 
+Response:
+2025-02-15 12:25:57,927 - INFO - Status Code: 200
+2025-02-15 12:25:57,928 - INFO - Body: {
+  "id": "798c5583-9246-4bbb-9540-d19082fe5e57",
+  "title": "Test Project",
+  "description": "This is a test project",
+  "status": "active",
+  "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+  "createdAt": "2025-02-15T06:55:55.830Z",
+  "updatedAt": "2025-02-15T06:55:55.830Z",
+  "User": {
+    "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+    "username": "testuser_20250215122552",
+    "avatar": null
+  }
+}
+2025-02-15 12:25:58,934 - INFO - 
+=== Running Test: Create Comment ===
+2025-02-15 12:25:58,935 - INFO - 
+Request:
+2025-02-15 12:25:58,935 - INFO - Method: POST
+2025-02-15 12:25:58,936 - INFO - URL: http://localhost:3000/api/comments
+2025-02-15 12:25:58,937 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:58,938 - INFO - Data: {
+  "projectId": "798c5583-9246-4bbb-9540-d19082fe5e57",
+  "content": "This is a test comment"
+}
+2025-02-15 12:25:58,960 - INFO - 
+Response:
+2025-02-15 12:25:58,961 - INFO - Status Code: 201
+2025-02-15 12:25:58,961 - INFO - Body: {
+  "id": "71622bbc-5bb4-4714-ad3c-319fe2bab914",
+  "content": "This is a test comment",
+  "projectId": "798c5583-9246-4bbb-9540-d19082fe5e57",
+  "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+  "updatedAt": "2025-02-15T06:55:58.950Z",
+  "createdAt": "2025-02-15T06:55:58.950Z",
+  "parentId": null
+}
+2025-02-15 12:25:59,969 - INFO - 
+=== Running Test: Get Comments ===
+2025-02-15 12:25:59,970 - INFO - 
+Request:
+2025-02-15 12:25:59,971 - INFO - Method: GET
+2025-02-15 12:25:59,971 - INFO - URL: http://localhost:3000/api/comments/project/798c5583-9246-4bbb-9540-d19082fe5e57
+2025-02-15 12:25:59,972 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:25:59,994 - INFO - 
+Response:
+2025-02-15 12:25:59,995 - INFO - Status Code: 200
+2025-02-15 12:25:59,995 - INFO - Body: {
+  "comments": [
+    {
+      "id": "71622bbc-5bb4-4714-ad3c-319fe2bab914",
+      "content": "This is a test comment",
+      "parentId": null,
+      "createdAt": "2025-02-15T06:55:58.950Z",
+      "updatedAt": "2025-02-15T06:55:58.950Z",
+      "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+      "projectId": "798c5583-9246-4bbb-9540-d19082fe5e57",
+      "User": {
+        "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+        "username": "testuser_20250215122552",
+        "avatar": null
+      }
+    }
+  ],
+  "pagination": {
+    "total": 1,
+    "page": 1,
+    "totalPages": 1
+  }
+}
+2025-02-15 12:26:01,002 - INFO - 
+=== Running Test: Update Comment ===
+2025-02-15 12:26:01,003 - INFO - 
+Request:
+2025-02-15 12:26:01,003 - INFO - Method: PUT
+2025-02-15 12:26:01,004 - INFO - URL: http://localhost:3000/api/comments/71622bbc-5bb4-4714-ad3c-319fe2bab914
+2025-02-15 12:26:01,005 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:26:01,005 - INFO - Data: {
+  "content": "Updated comment"
+}
+2025-02-15 12:26:01,035 - INFO - 
+Response:
+2025-02-15 12:26:01,036 - INFO - Status Code: 200
+2025-02-15 12:26:01,037 - INFO - Body: {
+  "id": "71622bbc-5bb4-4714-ad3c-319fe2bab914",
+  "content": "Updated comment",
+  "parentId": null,
+  "createdAt": "2025-02-15T06:55:58.950Z",
+  "updatedAt": "2025-02-15T06:56:01.020Z",
+  "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+  "projectId": "798c5583-9246-4bbb-9540-d19082fe5e57"
+}
+2025-02-15 12:26:02,045 - INFO - 
+=== Running Test: Update Project ===
+2025-02-15 12:26:02,045 - INFO - 
+Request:
+2025-02-15 12:26:02,046 - INFO - Method: PUT
+2025-02-15 12:26:02,046 - INFO - URL: http://localhost:3000/api/projects/798c5583-9246-4bbb-9540-d19082fe5e57
+2025-02-15 12:26:02,046 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:26:02,046 - INFO - Data: {
+  "title": "Updated Project",
+  "description": "This is an updated project",
+  "status": "completed"
+}
+2025-02-15 12:26:02,065 - INFO - 
+Response:
+2025-02-15 12:26:02,065 - INFO - Status Code: 200
+2025-02-15 12:26:02,066 - INFO - Body: {
+  "id": "798c5583-9246-4bbb-9540-d19082fe5e57",
+  "title": "Updated Project",
+  "description": "This is an updated project",
+  "status": "completed",
+  "userId": "8f417576-b556-4af0-8a7f-a208007804b9",
+  "createdAt": "2025-02-15T06:55:55.830Z",
+  "updatedAt": "2025-02-15T06:56:02.054Z",
+  "User": {
+    "id": "8f417576-b556-4af0-8a7f-a208007804b9",
+    "username": "testuser_20250215122552",
+    "avatar": null
+  }
+}
+2025-02-15 12:26:03,071 - INFO - 
+=== Running Test: Delete Comment ===
+2025-02-15 12:26:03,072 - INFO - 
+Request:
+2025-02-15 12:26:03,073 - INFO - Method: DELETE
+2025-02-15 12:26:03,073 - INFO - URL: http://localhost:3000/api/comments/71622bbc-5bb4-4714-ad3c-319fe2bab914
+2025-02-15 12:26:03,074 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:26:03,095 - INFO - 
+Response:
+2025-02-15 12:26:03,095 - INFO - Status Code: 200
+2025-02-15 12:26:03,096 - INFO - Body: {
+  "message": "Comment deleted successfully"
+}
+2025-02-15 12:26:04,103 - INFO - 
+=== Running Test: Delete Project ===
+2025-02-15 12:26:04,104 - INFO - 
+Request:
+2025-02-15 12:26:04,104 - INFO - Method: DELETE
+2025-02-15 12:26:04,105 - INFO - URL: http://localhost:3000/api/projects/798c5583-9246-4bbb-9540-d19082fe5e57
+2025-02-15 12:26:04,106 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhmNDE3NTc2LWI1NTYtNGFmMC04YTdmLWEyMDgwMDc4MDRiOSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyNTU0LCJleHAiOjE3Mzk2ODg5NTR9.Ea0LHkjzVgyXbb1Az4pdp6nuik38QQNi7-SC4Cg3370"
+}
+2025-02-15 12:26:04,121 - INFO - 
+Response:
+2025-02-15 12:26:04,122 - INFO - Status Code: 200
+2025-02-15 12:26:04,122 - INFO - Body: {
+  "message": "Project deleted successfully"
+}
+2025-02-15 12:26:05,129 - INFO - 
+=== Test Report ===
+2025-02-15 12:26:05,130 - INFO - Total Tests: 12
+2025-02-15 12:26:05,130 - INFO - Successful Tests: 12
+2025-02-15 12:26:05,131 - INFO - Failed Tests: 0
+2025-02-15 12:26:05,132 - INFO - Success Rate: 100.00%

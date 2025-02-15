@@ -1,0 +1,154 @@
+2025-02-15 12:19:11,465 - INFO - 
+=== Starting API Tests ===
+
+2025-02-15 12:19:11,466 - INFO - 
+=== Running Test: Health Check ===
+2025-02-15 12:19:11,467 - INFO - 
+Request:
+2025-02-15 12:19:11,467 - INFO - Method: GET
+2025-02-15 12:19:11,467 - INFO - URL: http://localhost:3000/health
+2025-02-15 12:19:11,486 - INFO - 
+Response:
+2025-02-15 12:19:11,487 - INFO - Status Code: 200
+2025-02-15 12:19:11,487 - INFO - Body: {
+  "status": "OK"
+}
+2025-02-15 12:19:12,493 - INFO - 
+=== Running Test: Registration ===
+2025-02-15 12:19:12,494 - INFO - 
+Request:
+2025-02-15 12:19:12,496 - INFO - Method: POST
+2025-02-15 12:19:12,497 - INFO - URL: http://localhost:3000/api/auth/register
+2025-02-15 12:19:12,498 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:19:12,499 - INFO - Data: {
+  "email": "test_20250215121911@example.com",
+  "password": "password123",
+  "username": "testuser_20250215121911"
+}
+2025-02-15 12:19:12,733 - INFO - 
+Response:
+2025-02-15 12:19:12,734 - INFO - Status Code: 201
+2025-02-15 12:19:12,735 - INFO - Body: {
+  "user": {
+    "id": "5417ca6a-4436-49a0-b0aa-a59b51cc16f1",
+    "role": "user",
+    "isActive": true,
+    "email": "test_20250215121911@example.com",
+    "password": "$2a$10$GiEF3XaHRsSBxuti1LsgdeVS62ciz8XftYYP4oRYj3Y/R165D1mM6",
+    "username": "testuser_20250215121911",
+    "updatedAt": "2025-02-15T06:49:12.522Z",
+    "createdAt": "2025-02-15T06:49:12.522Z",
+    "bio": null,
+    "avatar": null
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0MTdjYTZhLTQ0MzYtNDlhMC1iMGFhLWE1OWI1MWNjMTZmMSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyMTUyLCJleHAiOjE3Mzk2ODg1NTJ9.vPYmVHiSMaL-zpk8ZoSbYpLyXHqdzGFqwTcGkVInETU"
+}
+2025-02-15 12:19:13,744 - INFO - 
+=== Running Test: Login ===
+2025-02-15 12:19:13,745 - INFO - 
+Request:
+2025-02-15 12:19:13,747 - INFO - Method: POST
+2025-02-15 12:19:13,748 - INFO - URL: http://localhost:3000/api/auth/login
+2025-02-15 12:19:13,749 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:19:13,749 - INFO - Data: {
+  "email": "test_20250215121911@example.com",
+  "password": "password123"
+}
+2025-02-15 12:19:13,884 - INFO - 
+Response:
+2025-02-15 12:19:13,884 - INFO - Status Code: 200
+2025-02-15 12:19:13,885 - INFO - Body: {
+  "user": {
+    "id": "5417ca6a-4436-49a0-b0aa-a59b51cc16f1",
+    "username": "testuser_20250215121911",
+    "email": "test_20250215121911@example.com",
+    "password": "$2a$10$GiEF3XaHRsSBxuti1LsgdeVS62ciz8XftYYP4oRYj3Y/R165D1mM6",
+    "role": "user",
+    "bio": null,
+    "avatar": null,
+    "isActive": true,
+    "createdAt": "2025-02-15T06:49:12.522Z",
+    "updatedAt": "2025-02-15T06:49:12.522Z"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0MTdjYTZhLTQ0MzYtNDlhMC1iMGFhLWE1OWI1MWNjMTZmMSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyMTUzLCJleHAiOjE3Mzk2ODg1NTN9.j2ELvo5MjVAyZ9RtT5DB3X2gU4vY4aEDMf9OecdjR2I"
+}
+2025-02-15 12:19:14,888 - INFO - 
+=== Running Test: Create Project ===
+2025-02-15 12:19:14,889 - INFO - 
+Request:
+2025-02-15 12:19:14,890 - INFO - Method: POST
+2025-02-15 12:19:14,891 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:19:14,892 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0MTdjYTZhLTQ0MzYtNDlhMC1iMGFhLWE1OWI1MWNjMTZmMSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyMTUzLCJleHAiOjE3Mzk2ODg1NTN9.j2ELvo5MjVAyZ9RtT5DB3X2gU4vY4aEDMf9OecdjR2I"
+}
+2025-02-15 12:19:14,893 - INFO - Data: {
+  "title": "Test Project",
+  "description": "This is a test project",
+  "status": "active"
+}
+2025-02-15 12:19:14,923 - INFO - 
+Response:
+2025-02-15 12:19:14,924 - INFO - Status Code: 500
+2025-02-15 12:19:14,924 - INFO - Body: {
+  "error": "column \"userId\" of relation \"Projects\" does not exist"
+}
+2025-02-15 12:19:14,932 - ERROR - Expected status 201, got 500
+2025-02-15 12:19:15,934 - INFO - 
+=== Running Test: Get Projects ===
+2025-02-15 12:19:15,935 - INFO - 
+Request:
+2025-02-15 12:19:15,935 - INFO - Method: GET
+2025-02-15 12:19:15,935 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:19:15,936 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0MTdjYTZhLTQ0MzYtNDlhMC1iMGFhLWE1OWI1MWNjMTZmMSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAyMTUzLCJleHAiOjE3Mzk2ODg1NTN9.j2ELvo5MjVAyZ9RtT5DB3X2gU4vY4aEDMf9OecdjR2I"
+}
+2025-02-15 12:19:15,966 - INFO - 
+Response:
+2025-02-15 12:19:15,967 - INFO - Status Code: 500
+2025-02-15 12:19:15,968 - INFO - Body: {
+  "error": "column Project.userId does not exist"
+}
+2025-02-15 12:19:15,975 - ERROR - Expected status 200, got 500
+2025-02-15 12:19:16,977 - INFO - 
+=== Running Test: Get Project ===
+2025-02-15 12:19:16,977 - ERROR - No project ID available for testing
+2025-02-15 12:19:17,979 - INFO - 
+=== Running Test: Create Comment ===
+2025-02-15 12:19:17,979 - ERROR - No project ID available for testing
+2025-02-15 12:19:18,981 - INFO - 
+=== Running Test: Get Comments ===
+2025-02-15 12:19:18,981 - ERROR - No project ID available for testing
+2025-02-15 12:19:19,983 - INFO - 
+=== Running Test: Update Comment ===
+2025-02-15 12:19:19,984 - ERROR - No comment ID available for testing
+2025-02-15 12:19:20,985 - INFO - 
+=== Running Test: Update Project ===
+2025-02-15 12:19:20,985 - ERROR - No project ID available for testing
+2025-02-15 12:19:21,987 - INFO - 
+=== Running Test: Delete Comment ===
+2025-02-15 12:19:21,988 - ERROR - No comment ID available for testing
+2025-02-15 12:19:22,990 - INFO - 
+=== Running Test: Delete Project ===
+2025-02-15 12:19:22,991 - ERROR - No project ID available for testing
+2025-02-15 12:19:23,992 - INFO - 
+=== Test Report ===
+2025-02-15 12:19:23,994 - INFO - Total Tests: 5
+2025-02-15 12:19:23,995 - INFO - Successful Tests: 3
+2025-02-15 12:19:23,996 - INFO - Failed Tests: 2
+2025-02-15 12:19:23,997 - INFO - Success Rate: 60.00%
+2025-02-15 12:19:23,997 - INFO - 
+Failed Tests Details:
+2025-02-15 12:19:23,998 - INFO - 
+Create Project:
+2025-02-15 12:19:23,999 - INFO -   expected_status: 201
+2025-02-15 12:19:23,999 - INFO -   actual_status: 500
+2025-02-15 12:19:24,000 - INFO -   response: {"error":"column \"userId\" of relation \"Projects\" does not exist"}
+2025-02-15 12:19:24,001 - INFO - 
+Get All Projects:
+2025-02-15 12:19:24,002 - INFO -   expected_status: 200
+2025-02-15 12:19:24,006 - INFO -   actual_status: 500
+2025-02-15 12:19:24,007 - INFO -   response: {"error":"column Project.userId does not exist"}

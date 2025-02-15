@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - Project Showcase Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 0;
+            background: radial-gradient(circle at top right, rgba(108, 99, 255, 0.1), transparent);
+        }
+
+        .profile-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .profile-sidebar {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            border: 4px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-title {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .profile-stat {
+            padding: 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 8px;
+        }
+
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .profile-stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .profile-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-link:hover {
+            opacity: 1;
+        }
+
+        .profile-main {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .profile-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .profile-section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--text-color);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .card-tags span {
+            padding: 0.25rem 0.75rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 15px;
+            font-size: 0.875rem;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .sidebar-skills {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            text-align: left;
+        }
+
+        .sidebar-skills .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: flex-start;
+        }
+
+        .sidebar-skills .skill-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(79, 70, 229, 0.1);
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .achievement-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .achievement-card p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="index.html" class="nav-logo">ProjectShowcase</a>
+            <button class="mobile-nav-toggle">☰</button>
+            <ul class="nav-links">
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="login.html" class="btn btn-primary">Login</a></li>
+                <li><button class="theme-toggle" onclick="toggleTheme()">🌓</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="profile-hero">
+            <div class="profile-content">
+                <div class="profile-sidebar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Profile Avatar" class="profile-avatar">
+                    <h1 class="profile-name">John Doe</h1>
+                    <p class="profile-title">Senior Software Developer</p>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">15</div>
+                            <div class="profile-stat-label">Projects</div>
+                        </div>
+                        <div class="profile-stat">
+                            <div class="profile-stat-value">2.3k</div>
+                            <div class="profile-stat-label">Followers</div>
+                        </div>
+                    </div>
+                    <div class="profile-social">
+                        <a href="#" class="social-link">📱</a>
+                        <a href="#" class="social-link">💻</a>
+                        <a href="#" class="social-link">📧</a>
+                    </div>
+                    
+                    <div class="sidebar-skills">
+                        <h2 class="sidebar-title">Skills</h2>
+                        <div class="skills-grid">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Machine Learning</span>
+                            <span class="skill-tag">AWS</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">Git</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-main">
+                    <section class="profile-section">
+                        <h2 class="profile-section-title">About Me</h2>
+                        <p>Passionate software developer with over 5 years of experience in full-stack development. Specialized in creating innovative solutions using modern technologies. Always eager to learn and contribute to exciting projects.</p>
+                    </section>
+
+                    <section class="profile-section">
+                        <h2 class="profile-section-title">Achievements</h2>
+                        <div class="achievements-grid">
+                            <div class="achievement-card">
+                                <div class="achievement-icon">🏆</div>
+                                <h3>Best Developer Award</h3>
+                                <p>Recognized as the top performer in the annual developer conference 2023</p>
+                            </div>
+                            <div class="achievement-card">
+                                <div class="achievement-icon">🎓</div>
+                                <h3>AWS Certification</h3>
+                                <p>Achieved AWS Solutions Architect Professional certification</p>
+                            </div>
+                            <div class="achievement-card">
+                                <div class="achievement-icon">🌟</div>
+                                <h3>Open Source Contributor</h3>
+                                <p>Top 1% contributor on GitHub with over 500+ contributions</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="profile-section">
+                        <h2 class="profile-section-title">Featured Projects</h2>
+                        <div class="projects-grid">
+                            <div class="project-card">
+                                <h3>AI Chat Assistant</h3>
+                                <p>A sophisticated chatbot powered by machine learning.</p>
+                                <div class="card-tags">
+                                    <span>AI</span>
+                                    <span>Python</span>
+                                </div>
+                            </div>
+                            <div class="project-card">
+                                <h3>E-commerce Platform</h3>
+                                <p>Modern, scalable online shopping solution.</p>
+                                <div class="card-tags">
+                                    <span>React</span>
+                                    <span>Node.js</span>
+                                </div>
+                            </div>
+                            <div class="project-card">
+                                <h3>Mobile Game</h3>
+                                <p>Immersive 3D puzzle game with stunning graphics.</p>
+                                <div class="card-tags">
+                                    <span>Unity</span>
+                                    <span>C#</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Project Showcase Platform. Empowering creators worldwide.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.dataset.theme = 
+                document.body.dataset.theme === 'dark' ? 'light' : 'dark';
+        }
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>

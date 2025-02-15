@@ -1,0 +1,292 @@
+2025-02-15 12:13:15,210 - INFO - 
+=== Starting API Tests ===
+
+2025-02-15 12:13:15,211 - INFO - 
+=== Running Test: Health Check ===
+2025-02-15 12:13:15,211 - INFO - 
+Request:
+2025-02-15 12:13:15,212 - INFO - Method: GET
+2025-02-15 12:13:15,212 - INFO - URL: http://localhost:3000/health
+2025-02-15 12:13:15,232 - INFO - 
+Response:
+2025-02-15 12:13:15,233 - INFO - Status Code: 200
+2025-02-15 12:13:15,233 - INFO - Body: {
+  "status": "OK"
+}
+2025-02-15 12:13:16,239 - INFO - 
+=== Running Test: Registration ===
+2025-02-15 12:13:16,240 - INFO - 
+Request:
+2025-02-15 12:13:16,245 - INFO - Method: POST
+2025-02-15 12:13:16,246 - INFO - URL: http://localhost:3000/api/auth/register
+2025-02-15 12:13:16,247 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:13:16,248 - INFO - Data: {
+  "email": "test_20250215121315@example.com",
+  "password": "password123",
+  "username": "testuser_20250215121315"
+}
+2025-02-15 12:13:16,492 - INFO - 
+Response:
+2025-02-15 12:13:16,493 - INFO - Status Code: 201
+2025-02-15 12:13:16,493 - INFO - Body: {
+  "user": {
+    "id": "9314d519-c1ee-4c68-80d8-d8cbfa3e7249",
+    "role": "user",
+    "isActive": true,
+    "email": "test_20250215121315@example.com",
+    "password": "$2a$10$GPuz6Rs2m7xTEqiktbw9PuSAA.8UtshVQT.LEkjzVomW7ri4jk7.W",
+    "username": "testuser_20250215121315",
+    "updatedAt": "2025-02-15T06:43:16.284Z",
+    "createdAt": "2025-02-15T06:43:16.284Z",
+    "bio": null,
+    "avatar": null
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk2LCJleHAiOjE3Mzk2ODgxOTZ9.SwR1UyvORHb-3CvdX2JA5zWd1iWckKLeJgISbOBL3-w"
+}
+2025-02-15 12:13:17,497 - INFO - 
+=== Running Test: Login ===
+2025-02-15 12:13:17,498 - INFO - 
+Request:
+2025-02-15 12:13:17,499 - INFO - Method: POST
+2025-02-15 12:13:17,500 - INFO - URL: http://localhost:3000/api/auth/login
+2025-02-15 12:13:17,501 - INFO - Headers: {
+  "Content-Type": "application/json"
+}
+2025-02-15 12:13:17,502 - INFO - Data: {
+  "email": "test_20250215121315@example.com",
+  "password": "password123"
+}
+2025-02-15 12:13:17,617 - INFO - 
+Response:
+2025-02-15 12:13:17,617 - INFO - Status Code: 200
+2025-02-15 12:13:17,619 - INFO - Body: {
+  "user": {
+    "id": "9314d519-c1ee-4c68-80d8-d8cbfa3e7249",
+    "username": "testuser_20250215121315",
+    "email": "test_20250215121315@example.com",
+    "password": "$2a$10$GPuz6Rs2m7xTEqiktbw9PuSAA.8UtshVQT.LEkjzVomW7ri4jk7.W",
+    "role": "user",
+    "bio": null,
+    "avatar": null,
+    "isActive": true,
+    "createdAt": "2025-02-15T06:43:16.284Z",
+    "updatedAt": "2025-02-15T06:43:16.284Z"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:18,630 - INFO - 
+=== Running Test: Create Project ===
+2025-02-15 12:13:18,630 - INFO - 
+Request:
+2025-02-15 12:13:18,631 - INFO - Method: POST
+2025-02-15 12:13:18,631 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:13:18,632 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:18,633 - INFO - Data: {
+  "title": "Test Project",
+  "description": "This is a test project",
+  "status": "active"
+}
+2025-02-15 12:13:18,657 - INFO - 
+Response:
+2025-02-15 12:13:18,658 - INFO - Status Code: 500
+2025-02-15 12:13:18,659 - INFO - Body: {
+  "error": "column \"userId\" of relation \"Projects\" does not exist"
+}
+2025-02-15 12:13:18,668 - ERROR - Expected status 201, got 500
+2025-02-15 12:13:19,669 - INFO - 
+=== Running Test: Get Projects ===
+2025-02-15 12:13:19,670 - INFO - 
+Request:
+2025-02-15 12:13:19,671 - INFO - Method: GET
+2025-02-15 12:13:19,672 - INFO - URL: http://localhost:3000/api/projects
+2025-02-15 12:13:19,672 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:19,699 - INFO - 
+Response:
+2025-02-15 12:13:19,699 - INFO - Status Code: 500
+2025-02-15 12:13:19,700 - INFO - Body: {
+  "error": "column Project.userId does not exist"
+}
+2025-02-15 12:13:19,708 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:20,710 - INFO - 
+=== Running Test: Get Project ===
+2025-02-15 12:13:20,710 - INFO - 
+Request:
+2025-02-15 12:13:20,711 - INFO - Method: GET
+2025-02-15 12:13:20,711 - INFO - URL: http://localhost:3000/api/projects/None
+2025-02-15 12:13:20,712 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:20,729 - INFO - 
+Response:
+2025-02-15 12:13:20,730 - INFO - Status Code: 500
+2025-02-15 12:13:20,730 - INFO - Body: {
+  "error": "column Project.userId does not exist"
+}
+2025-02-15 12:13:20,734 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:21,736 - INFO - 
+=== Running Test: Create Comment ===
+2025-02-15 12:13:21,737 - INFO - 
+Request:
+2025-02-15 12:13:21,738 - INFO - Method: POST
+2025-02-15 12:13:21,739 - INFO - URL: http://localhost:3000/api/comments
+2025-02-15 12:13:21,739 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:21,740 - INFO - Data: {
+  "projectId": null,
+  "content": "This is a test comment"
+}
+2025-02-15 12:13:21,751 - INFO - 
+Response:
+2025-02-15 12:13:21,756 - INFO - Status Code: 404
+2025-02-15 12:13:21,756 - INFO - Body: {
+  "error": "Project not found"
+}
+2025-02-15 12:13:21,760 - ERROR - Expected status 201, got 404
+2025-02-15 12:13:22,762 - INFO - 
+=== Running Test: Get Comments ===
+2025-02-15 12:13:22,763 - INFO - 
+Request:
+2025-02-15 12:13:22,764 - INFO - Method: GET
+2025-02-15 12:13:22,764 - INFO - URL: http://localhost:3000/api/comments/project/None
+2025-02-15 12:13:22,765 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:22,777 - INFO - 
+Response:
+2025-02-15 12:13:22,778 - INFO - Status Code: 500
+2025-02-15 12:13:22,778 - INFO - Body: {
+  "error": "column \"userId\" does not exist"
+}
+2025-02-15 12:13:22,781 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:23,783 - INFO - 
+=== Running Test: Update Comment ===
+2025-02-15 12:13:23,783 - INFO - 
+Request:
+2025-02-15 12:13:23,784 - INFO - Method: PUT
+2025-02-15 12:13:23,784 - INFO - URL: http://localhost:3000/api/comments/None
+2025-02-15 12:13:23,784 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:23,784 - INFO - Data: {
+  "content": "Updated comment"
+}
+2025-02-15 12:13:23,799 - INFO - 
+Response:
+2025-02-15 12:13:23,800 - INFO - Status Code: 500
+2025-02-15 12:13:23,801 - INFO - Body: {
+  "error": "column \"userId\" does not exist"
+}
+2025-02-15 12:13:23,805 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:24,807 - INFO - 
+=== Running Test: Update Project ===
+2025-02-15 12:13:24,807 - INFO - 
+Request:
+2025-02-15 12:13:24,808 - INFO - Method: PUT
+2025-02-15 12:13:24,809 - INFO - URL: http://localhost:3000/api/projects/None
+2025-02-15 12:13:24,810 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:24,811 - INFO - Data: {
+  "title": "Updated Project",
+  "description": "This is an updated project",
+  "status": "completed"
+}
+2025-02-15 12:13:24,830 - INFO - 
+Response:
+2025-02-15 12:13:24,830 - INFO - Status Code: 500
+2025-02-15 12:13:24,831 - INFO - Body: {
+  "error": "column \"userId\" does not exist"
+}
+2025-02-15 12:13:24,838 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:25,840 - INFO - 
+=== Running Test: Delete Comment ===
+2025-02-15 12:13:25,840 - INFO - 
+Request:
+2025-02-15 12:13:25,845 - INFO - Method: DELETE
+2025-02-15 12:13:25,846 - INFO - URL: http://localhost:3000/api/comments/None
+2025-02-15 12:13:25,847 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:25,855 - INFO - 
+Response:
+2025-02-15 12:13:25,855 - INFO - Status Code: 500
+2025-02-15 12:13:25,855 - INFO - Body: {
+  "error": "column \"userId\" does not exist"
+}
+2025-02-15 12:13:25,857 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:26,858 - INFO - 
+=== Running Test: Delete Project ===
+2025-02-15 12:13:26,859 - INFO - 
+Request:
+2025-02-15 12:13:26,860 - INFO - Method: DELETE
+2025-02-15 12:13:26,860 - INFO - URL: http://localhost:3000/api/projects/None
+2025-02-15 12:13:26,861 - INFO - Headers: {
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkzMTRkNTE5LWMxZWUtNGM2OC04MGQ4LWQ4Y2JmYTNlNzI0OSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzM5NjAxNzk3LCJleHAiOjE3Mzk2ODgxOTd9.tAxULuWtjCOLlTVXX2iEs0bO1zJbI4_1LkjxcxQ7QT8"
+}
+2025-02-15 12:13:26,876 - INFO - 
+Response:
+2025-02-15 12:13:26,876 - INFO - Status Code: 500
+2025-02-15 12:13:26,877 - INFO - Body: {
+  "error": "column \"userId\" does not exist"
+}
+2025-02-15 12:13:26,882 - ERROR - Expected status 200, got 500
+2025-02-15 12:13:27,883 - INFO - 
+=== Test Report ===
+2025-02-15 12:13:27,884 - INFO - Total Tests: 12
+2025-02-15 12:13:27,885 - INFO - Successful Tests: 3
+2025-02-15 12:13:27,886 - INFO - Failed Tests: 9
+2025-02-15 12:13:27,886 - INFO - Success Rate: 25.00%
+2025-02-15 12:13:27,887 - INFO - 
+Failed Tests Details:
+2025-02-15 12:13:27,887 - INFO - 
+Create Project:
+2025-02-15 12:13:27,888 - INFO -   expected_status: 201
+2025-02-15 12:13:27,889 - INFO -   actual_status: 500
+2025-02-15 12:13:27,890 - INFO -   response: {"error":"column \"userId\" of relation \"Projects\" does not exist"}
+2025-02-15 12:13:27,891 - INFO - 
+Get All Projects:
+2025-02-15 12:13:27,891 - INFO -   expected_status: 200
+2025-02-15 12:13:27,891 - INFO -   actual_status: 500
+2025-02-15 12:13:27,893 - INFO -   response: {"error":"column Project.userId does not exist"}
+2025-02-15 12:13:27,893 - INFO - 
+Get Project by ID:
+2025-02-15 12:13:27,894 - INFO -   expected_status: 200
+2025-02-15 12:13:27,895 - INFO -   actual_status: 500
+2025-02-15 12:13:27,896 - INFO -   response: {"error":"column Project.userId does not exist"}
+2025-02-15 12:13:27,896 - INFO - 
+Create Comment:
+2025-02-15 12:13:27,897 - INFO -   expected_status: 201
+2025-02-15 12:13:27,897 - INFO -   actual_status: 404
+2025-02-15 12:13:27,898 - INFO -   response: {"error":"Project not found"}
+2025-02-15 12:13:27,899 - INFO - 
+Get Project Comments:
+2025-02-15 12:13:27,899 - INFO -   expected_status: 200
+2025-02-15 12:13:27,900 - INFO -   actual_status: 500
+2025-02-15 12:13:27,900 - INFO -   response: {"error":"column \"userId\" does not exist"}
+2025-02-15 12:13:27,900 - INFO - 
+Update Comment:
+2025-02-15 12:13:27,901 - INFO -   expected_status: 200
+2025-02-15 12:13:27,901 - INFO -   actual_status: 500
+2025-02-15 12:13:27,902 - INFO -   response: {"error":"column \"userId\" does not exist"}
+2025-02-15 12:13:27,902 - INFO - 
+Update Project:
+2025-02-15 12:13:27,907 - INFO -   expected_status: 200
+2025-02-15 12:13:27,908 - INFO -   actual_status: 500
+2025-02-15 12:13:27,908 - INFO -   response: {"error":"column \"userId\" does not exist"}
+2025-02-15 12:13:27,909 - INFO - 
+Delete Comment:
+2025-02-15 12:13:27,909 - INFO -   expected_status: 200
+2025-02-15 12:13:27,910 - INFO -   actual_status: 500
+2025-02-15 12:13:27,910 - INFO -   response: {"error":"column \"userId\" does not exist"}
+2025-02-15 12:13:27,911 - INFO - 
+Delete Project:
+2025-02-15 12:13:27,911 - INFO -   expected_status: 200
+2025-02-15 12:13:27,912 - INFO -   actual_status: 500
+2025-02-15 12:13:27,912 - INFO -   response: {"error":"column \"userId\" does not exist"}
