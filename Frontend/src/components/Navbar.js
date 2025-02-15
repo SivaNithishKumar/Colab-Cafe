@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
-=======
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { useTheme } from '../hooks/useTheme';
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
 const NavContainer = styled.header`
   background: var(--bg-color);
@@ -81,7 +75,6 @@ const ThemeToggle = styled.button`
   color: var(--text-color);
 `;
 
-<<<<<<< HEAD
 const ProfileButton = styled.button`
   background: none;
   border: none;
@@ -153,26 +146,18 @@ const Navbar = () => {
   const { toggleTheme } = useTheme();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-=======
-const Navbar = () => {
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
-  const { toggleTheme } = useTheme();
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
   const handleMobileNavToggle = () => {
     setIsMobileNavOpen(!isMobileNavOpen);
     document.body.style.overflow = !isMobileNavOpen ? 'hidden' : '';
   };
 
-<<<<<<< HEAD
   const handleLogout = () => {
     logout();
     setIsProfileDropdownOpen(false);
     navigate('/');
   };
 
-=======
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
   return (
     <NavContainer>
       <Nav>
@@ -184,7 +169,6 @@ const Navbar = () => {
           <li><NavLink to="/projects">Projects</NavLink></li>
           <li><NavLink to="/categories">Categories</NavLink></li>
           <li><NavLink to="/about">About</NavLink></li>
-<<<<<<< HEAD
           <NavbarRight>
             {user ? (
               <>
@@ -217,10 +201,6 @@ const Navbar = () => {
             )}
             <li><ThemeToggle onClick={toggleTheme}>🌓</ThemeToggle></li>
           </NavbarRight>
-=======
-          <li><NavLink to="/login" className="btn btn-primary">Login</NavLink></li>
-          <li><ThemeToggle onClick={toggleTheme}>🌓</ThemeToggle></li>
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
         </NavLinks>
       </Nav>
       {isMobileNavOpen && (
@@ -230,7 +210,6 @@ const Navbar = () => {
               <li><NavLink to="/projects" onClick={handleMobileNavToggle}>Projects</NavLink></li>
               <li><NavLink to="/categories" onClick={handleMobileNavToggle}>Categories</NavLink></li>
               <li><NavLink to="/about" onClick={handleMobileNavToggle}>About</NavLink></li>
-<<<<<<< HEAD
               {user ? (
                 <>
                   <li>
@@ -254,9 +233,6 @@ const Navbar = () => {
                   </NavLink>
                 </li>
               )}
-=======
-              <li><NavLink to="/login" onClick={handleMobileNavToggle} className="btn btn-primary">Login</NavLink></li>
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
               <li><ThemeToggle onClick={toggleTheme}>🌓</ThemeToggle></li>
             </ul>
           </div>

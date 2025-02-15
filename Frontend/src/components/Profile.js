@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, Navigate, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
@@ -18,53 +17,27 @@ const fadeIn = keyframes`
 `;
 
 const ProfileHero = styled.section`
-=======
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const Hero = styled.section`
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
   min-height: 60vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-<<<<<<< HEAD
   padding: 4rem 0;
   background: 
     radial-gradient(circle at top right, rgba(108, 99, 255, 0.1), transparent),
     radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.1), transparent);
-=======
-  padding: 6rem 0;
-  background: radial-gradient(circle at top right, rgba(108, 99, 255, 0.1), transparent);
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-<<<<<<< HEAD
-=======
-    background: 
-      radial-gradient(circle at 70% 30%, rgba(79, 70, 229, 0.15), transparent 60%),
-      radial-gradient(circle at 30% 70%, rgba(6, 182, 212, 0.15), transparent 60%);
-    z-index: 0;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234f46e5' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     opacity: 0.3;
     z-index: 0;
   }
 `;
 
-<<<<<<< HEAD
 const ProfileContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -115,31 +88,10 @@ const ProfileAvatar = styled.div`
     object-fit: cover;
     border: 4px solid var(--bg-color);
   }
-=======
-const ProfileHeader = styled.div`
-  position: relative;
-  margin-top: -120px;
-  padding: 0 2rem;
-  margin-bottom: 2rem;
-  z-index: 10;
-`;
-
-const ProfileMain = styled.div`
-  background: var(--glass-bg);
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  position: relative;
-  overflow: hidden;
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
   &::before {
     content: '';
     position: absolute;
-<<<<<<< HEAD
     inset: -3px;
     border-radius: 50%;
     padding: 3px;
@@ -327,83 +279,12 @@ const SkillTag = styled.span`
   color: var(--text-color);
   transition: all 0.3s;
   cursor: default;
-=======
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--gradient-primary);
-    opacity: 0.7;
-  }
-`;
-
-const ProfileAvatar = styled.img`
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 4px solid var(--bg-color);
-  margin: -100px auto 1.5rem;
-  display: block;
-  box-shadow: var(--shadow-lg);
-  background: var(--bg-color);
-  padding: 4px;
-  position: relative;
-  z-index: 2;
-`;
-
-const ProfileInfo = styled.div`
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
-
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: titleGlow 3s ease-in-out infinite;
-  }
-
-  p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
-`;
-
-const ProfileBio = styled.div`
-  margin: 1rem 0;
-  padding: 1rem;
-  border-radius: 8px;
-  background: var(--glass-bg);
-`;
-
-const SkillTags = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 1rem 0;
-  justify-content: center;
-`;
-
-const SkillTag = styled.span`
-  padding: 0.25rem 1rem;
-  border-radius: 20px;
-  background: var(--glass-bg);
-  font-size: 0.875rem;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
 
   &:hover {
     background: var(--primary-color);
     color: white;
     transform: translateY(-2px);
   }
-<<<<<<< HEAD
 
   .remove-skill {
     margin-left: 0.5rem;
@@ -450,77 +331,10 @@ const SectionTitle = styled.h2`
     &:hover {
       background: rgba(79, 70, 229, 0.1);
       color: var(--primary-color);
-=======
-`;
-
-const ProfileStats = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  margin: 2rem 0;
-  padding: 1rem;
-  background: var(--glass-bg);
-  border-radius: 12px;
-`;
-
-const StatItem = styled.div`
-  text-align: center;
-  min-width: 100px;
-`;
-
-const StatValue = styled.div`
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-`;
-
-const StatLabel = styled.div`
-  font-size: 0.875rem;
-  color: var(--text-color);
-  opacity: 0.8;
-`;
-
-const ProfileActions = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin: 2rem 0;
-`;
-
-const ActionButton = styled.button`
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &.primary {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-
-    &:hover {
-      background: var(--primary-color-dark);
-      transform: translateY(-2px);
-    }
-  }
-
-  &.secondary {
-    background: var(--glass-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-
-    &:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
     }
   }
 `;
 
-<<<<<<< HEAD
 const AchievementsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -548,37 +362,10 @@ const AchievementCard = styled(GlassContainer)`
   }
 
   &:hover .edit-buttons {
-=======
-const ProfileTabs = styled.div`
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border-color);
-  margin: 2rem 0;
-  padding: 0 1rem;
-`;
-
-const Tab = styled.div`
-  padding: 1rem 2rem;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  font-weight: 500;
-  color: var(--text-color);
-  opacity: 0.7;
-  transition: all 0.2s;
-
-  &.active {
-    border-bottom-color: var(--primary-color);
-    opacity: 1;
-    color: var(--primary-color);
-  }
-
-  &:hover {
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
     opacity: 1;
   }
 `;
 
-<<<<<<< HEAD
 const AchievementIcon = styled.div`
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -607,43 +394,6 @@ const ProjectCard = styled(GlassContainer)`
 
   h3 {
     font-size: 1.2rem;
-=======
-const ProfileGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-`;
-
-const ProjectCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-`;
-
-const ProjectInfo = styled.div`
-  padding: 1.5rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-
-  h3 {
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
     margin-bottom: 0.5rem;
     color: var(--text-color);
   }
@@ -651,7 +401,6 @@ const ProjectInfo = styled.div`
   p {
     color: var(--text-muted);
     margin-bottom: 1rem;
-<<<<<<< HEAD
     line-height: 1.5;
   }
 
@@ -667,14 +416,11 @@ const ProjectInfo = styled.div`
 
   &:hover .edit-buttons {
     opacity: 1;
-=======
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
   }
 `;
 
 const CardTags = styled.div`
   display: flex;
-<<<<<<< HEAD
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
@@ -1084,152 +830,6 @@ const Profile = () => {
         </ProfileMain>
       </ProfileContent>
     </ProfileHero>
-=======
-  gap: 0.5rem;
-  margin: 1rem 0;
-
-  span {
-    padding: 0.25rem 0.75rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-  }
-`;
-
-const ProjectMeta = styled.div`
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-`;
-
-const Profile = () => {
-  const [activeTab, setActiveTab] = useState('Projects');
-
-  // Sample user data - replace with your actual data
-  const user = {
-    name: 'John Doe',
-    title: 'Senior Full Stack Developer | AI Enthusiast',
-    avatar: 'https://via.placeholder.com/160',
-    bio: 'Building innovative solutions with modern technologies. Passionate about AI, web development, and open source.',
-    skills: ['Python', 'JavaScript', 'React', 'Node.js', 'Machine Learning', 'AWS'],
-    stats: {
-      projects: 15,
-      followers: '1.2k',
-      following: 450,
-      likes: '5.2k'
-    },
-    projects: [
-      {
-        id: 1,
-        title: 'AI Chat Assistant',
-        description: 'A sophisticated chatbot powered by machine learning and NLP',
-        image: 'https://via.placeholder.com/300x200',
-        tags: ['AI', 'Python'],
-        likes: 245,
-        comments: 23
-      },
-      {
-        id: 2,
-        title: 'Portfolio Website',
-        description: 'Personal portfolio built with React and Three.js',
-        image: 'https://via.placeholder.com/300x200',
-        tags: ['Web', 'React'],
-        likes: 189,
-        comments: 15
-      }
-    ]
-  };
-
-  return (
-    <main>
-      <Hero />
-      <div className="container">
-        <ProfileHeader>
-          <ProfileMain>
-            <ProfileAvatar src={user.avatar} alt="Profile picture" />
-            <ProfileInfo>
-              <h1>{user.name}</h1>
-              <p>{user.title}</p>
-
-              <ProfileBio>
-                {user.bio}
-              </ProfileBio>
-
-              <SkillTags>
-                {user.skills.map(skill => (
-                  <SkillTag key={skill}>{skill}</SkillTag>
-                ))}
-              </SkillTags>
-
-              <ProfileStats>
-                <StatItem>
-                  <StatValue>{user.stats.projects}</StatValue>
-                  <StatLabel>Projects</StatLabel>
-                </StatItem>
-                <StatItem>
-                  <StatValue>{user.stats.followers}</StatValue>
-                  <StatLabel>Followers</StatLabel>
-                </StatItem>
-                <StatItem>
-                  <StatValue>{user.stats.following}</StatValue>
-                  <StatLabel>Following</StatLabel>
-                </StatItem>
-                <StatItem>
-                  <StatValue>{user.stats.likes}</StatValue>
-                  <StatLabel>Likes</StatLabel>
-                </StatItem>
-              </ProfileStats>
-
-              <ProfileActions>
-                <ActionButton className="primary">Follow</ActionButton>
-                <ActionButton className="secondary">Message</ActionButton>
-              </ProfileActions>
-            </ProfileInfo>
-
-            <ProfileTabs>
-              {['Projects', 'About', 'Activity', 'Followers'].map(tab => (
-                <Tab
-                  key={tab}
-                  className={activeTab === tab ? 'active' : ''}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab}
-                </Tab>
-              ))}
-            </ProfileTabs>
-
-            <ProfileGrid>
-              {user.projects.map(project => (
-                <ProjectCard key={project.id}>
-                  <img src={project.image} alt={project.title} />
-                  <ProjectInfo>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <CardTags>
-                      {project.tags.map(tag => (
-                        <span key={tag}>{tag}</span>
-                      ))}
-                    </CardTags>
-                    <ProjectMeta>
-                      <span>❤️ {project.likes}</span>
-                      <span>💬 {project.comments}</span>
-                    </ProjectMeta>
-                  </ProjectInfo>
-                </ProjectCard>
-              ))}
-            </ProfileGrid>
-          </ProfileMain>
-        </ProfileHeader>
-      </div>
-    </main>
->>>>>>> cb5b936b3ad25662a02ce09c2019746f0e763fc3
   );
 };
 
