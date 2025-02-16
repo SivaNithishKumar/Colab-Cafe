@@ -237,6 +237,99 @@
             color: var(--text-color);
             opacity: 0.8;
         }
+
+        .teams-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .team-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .team-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .team-role {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Navigation Profile Styles */
+        .nav-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .profile-menu {
+            position: relative;
+        }
+
+        .profile-link {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .profile-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+        }
+
+        .profile-link span {
+            font-weight: 500;
+        }
+
+        /* Member card link styles */
+        .member-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .member-link:hover {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -248,7 +341,12 @@
                 <li><a href="projects.html">Projects</a></li>
                 <li><a href="categories.html">Categories</a></li>
                 <li><a href="about.html">About</a></li>
-                <li><a href="login.html" class="btn btn-primary">Login</a></li>
+                <li class="profile-menu">
+                    <a href="profile.html" class="profile-link">
+                        <img src="https://avatars.githubusercontent.com/u/default" alt="darkside" class="nav-avatar">
+                        <span>darkside</span>
+                    </a>
+                </li>
                 <li><button class="theme-toggle" onclick="toggleTheme()">🌓</button></li>
             </ul>
         </nav>
@@ -258,36 +356,29 @@
         <section class="profile-hero">
             <div class="profile-content">
                 <div class="profile-sidebar">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E" alt="Profile Avatar" class="profile-avatar">
-                    <h1 class="profile-name">John Doe</h1>
-                    <p class="profile-title">Senior Software Developer</p>
+                    <img src="https://avatars.githubusercontent.com/u/default" alt="darkside" class="profile-avatar">
+                    <h1 class="profile-name">darkside</h1>
+                    <p class="profile-title">Full Stack Developer & Team Lead</p>
+                    
                     <div class="profile-stats">
                         <div class="profile-stat">
-                            <div class="profile-stat-value">15</div>
+                            <div class="profile-stat-value">25+</div>
                             <div class="profile-stat-label">Projects</div>
                         </div>
                         <div class="profile-stat">
-                            <div class="profile-stat-value">2.3k</div>
-                            <div class="profile-stat-label">Followers</div>
+                            <div class="profile-stat-value">3</div>
+                            <div class="profile-stat-label">Teams</div>
                         </div>
                     </div>
-                    <div class="profile-social">
-                        <a href="#" class="social-link">📱</a>
-                        <a href="#" class="social-link">💻</a>
-                        <a href="#" class="social-link">📧</a>
-                    </div>
-                    
+
                     <div class="sidebar-skills">
-                        <h2 class="sidebar-title">Skills</h2>
+                        <h2 class="sidebar-title">Core Skills</h2>
                         <div class="skills-grid">
-                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Python</span>
                             <span class="skill-tag">React</span>
                             <span class="skill-tag">Node.js</span>
-                            <span class="skill-tag">Python</span>
-                            <span class="skill-tag">Machine Learning</span>
-                            <span class="skill-tag">AWS</span>
-                            <span class="skill-tag">Docker</span>
-                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">AI/ML</span>
+                            <span class="skill-tag">DevOps</span>
                         </div>
                     </div>
                 </div>
@@ -295,7 +386,52 @@
                 <div class="profile-main">
                     <section class="profile-section">
                         <h2 class="profile-section-title">About Me</h2>
-                        <p>Passionate software developer with over 5 years of experience in full-stack development. Specialized in creating innovative solutions using modern technologies. Always eager to learn and contribute to exciting projects.</p>
+                        <p>A passionate full-stack developer with expertise in AI/ML and modern web technologies. Leading teams to create innovative solutions and mentoring fellow developers.</p>
+                    </section>
+
+                    <section class="profile-section teams-section">
+                        <h2 class="profile-section-title">My Teams</h2>
+                        <div class="teams-grid">
+                            <a href="team.html" class="team-card">
+                                <h3>Team Innovators</h3>
+                                <p>Leading a dynamic team of developers pushing the boundaries of technology.</p>
+                                <span class="team-role">Team Lead</span>
+                            </a>
+                            <a href="#" class="team-card">
+                                <h3>AI Research Group</h3>
+                                <p>Collaborating on cutting-edge AI/ML projects and research.</p>
+                                <span class="team-role">Core Member</span>
+                            </a>
+                            <a href="#" class="team-card">
+                                <h3>Web3 Pioneers</h3>
+                                <p>Exploring and developing blockchain-based solutions.</p>
+                                <span class="team-role">Technical Advisor</span>
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="profile-section">
+                        <h2 class="profile-section-title">Recent Projects</h2>
+                        <div class="projects-grid">
+                            <div class="project-card">
+                                <h3>AI Learning Assistant</h3>
+                                <p>An intelligent tutoring system that adapts to individual learning styles.</p>
+                                <div class="card-tags">
+                                    <span>Python</span>
+                                    <span>Machine Learning</span>
+                                    <span>Education</span>
+                                </div>
+                            </div>
+                            <div class="project-card">
+                                <h3>EcoTrack</h3>
+                                <p>Smart environmental monitoring system for sustainable urban development.</p>
+                                <div class="card-tags">
+                                    <span>IoT</span>
+                                    <span>Data Analytics</span>
+                                    <span>Sustainability</span>
+                                </div>
+                            </div>
+                        </div>
                     </section>
 
                     <section class="profile-section">
@@ -303,48 +439,13 @@
                         <div class="achievements-grid">
                             <div class="achievement-card">
                                 <div class="achievement-icon">🏆</div>
-                                <h3>Best Developer Award</h3>
-                                <p>Recognized as the top performer in the annual developer conference 2023</p>
-                            </div>
-                            <div class="achievement-card">
-                                <div class="achievement-icon">🎓</div>
-                                <h3>AWS Certification</h3>
-                                <p>Achieved AWS Solutions Architect Professional certification</p>
+                                <h3>Best Innovation Award 2023</h3>
+                                <p>Led the team to develop an award-winning AI solution.</p>
                             </div>
                             <div class="achievement-card">
                                 <div class="achievement-icon">🌟</div>
-                                <h3>Open Source Contributor</h3>
-                                <p>Top 1% contributor on GitHub with over 500+ contributions</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="profile-section">
-                        <h2 class="profile-section-title">Featured Projects</h2>
-                        <div class="projects-grid">
-                            <div class="project-card">
-                                <h3>AI Chat Assistant</h3>
-                                <p>A sophisticated chatbot powered by machine learning.</p>
-                                <div class="card-tags">
-                                    <span>AI</span>
-                                    <span>Python</span>
-                                </div>
-                            </div>
-                            <div class="project-card">
-                                <h3>E-commerce Platform</h3>
-                                <p>Modern, scalable online shopping solution.</p>
-                                <div class="card-tags">
-                                    <span>React</span>
-                                    <span>Node.js</span>
-                                </div>
-                            </div>
-                            <div class="project-card">
-                                <h3>Mobile Game</h3>
-                                <p>Immersive 3D puzzle game with stunning graphics.</p>
-                                <div class="card-tags">
-                                    <span>Unity</span>
-                                    <span>C#</span>
-                                </div>
+                                <h3>Top Contributor</h3>
+                                <p>Recognized for outstanding contributions to open-source projects.</p>
                             </div>
                         </div>
                     </section>
