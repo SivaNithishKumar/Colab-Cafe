@@ -1,10 +1,10 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // First drop existing tables if they exist
-    await queryInterface.dropTable('Comments', { cascade: true }).catch(() => {});
-    await queryInterface.dropTable('Projects', { cascade: true }).catch(() => {});
-    await queryInterface.dropTable('UserFollows', { cascade: true }).catch(() => {});
-    await queryInterface.dropTable('Users', { cascade: true }).catch(() => {});
+    await queryInterface.dropTable('Comments', { cascade: true }).catch(() => { });
+    await queryInterface.dropTable('Projects', { cascade: true }).catch(() => { });
+    await queryInterface.dropTable('UserFollows', { cascade: true }).catch(() => { });
+    await queryInterface.dropTable('Users', { cascade: true }).catch(() => { });
 
     // Create Users table
     await queryInterface.createTable('Users', {
@@ -68,9 +68,33 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
+      category: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      technologies: {
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        defaultValue: []
+      },
+      thumbnail: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      repoUrl: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      demoUrl: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       status: {
-        type: Sequelize.ENUM('active', 'completed', 'on-hold'),
-        defaultValue: 'active'
+        type: Sequelize.ENUM('draft', 'published'),
+        defaultValue: 'published'
+      },
+      views: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       userId: {
         type: Sequelize.UUID,

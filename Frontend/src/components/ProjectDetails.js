@@ -1,6 +1,18 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
+import { projectsApi } from '../services/projectsApi';
+import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -358,46 +370,35 @@ const GalleryItem = styled.div`
   }
 `;
 
-const ActionButton = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+const ActionButton = styled.button`
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
   transition: all 0.3s ease;
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
-  &.btn-primary {
+  &.primary {
     background: var(--primary-color);
     color: white;
+    border: none;
 
     &:hover {
       background: var(--primary-color-dark);
-      transform: translateY(-2px);
     }
   }
 
-  &.btn-secondary {
-    background: var(--glass-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-
-    &:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
-    }
-  }
-
-  &.btn-outline {
+  &.secondary {
     background: transparent;
     color: var(--text-color);
     border: 1px solid var(--border-color);
 
     &:hover {
+      background: var(--glass-bg);
       border-color: var(--primary-color);
-      color: var(--primary-color);
-      transform: translateY(-2px);
     }
   }
 `;
@@ -563,151 +564,160 @@ const ImplementationSection = styled.div`
   }
 `;
 
-const ProjectDetails = () => { // eslint-disable-next-line
-  const { id } = useParams(); 
+const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
-  const project = {
-    title: "Modern Web Platform",
-    subtitle: "A sophisticated web platform built with cutting-edge technologies",
-    preview: "https://source.unsplash.com/random/800x600?website",
-    description: {
-      overview: [
-        "This modern web platform showcases the latest in web development technologies and best practices. Built with scalability and performance in mind, it features a responsive design, real-time updates, and a seamless user experience.",
-        "The platform is designed to handle high traffic loads while maintaining optimal performance. It incorporates modern security practices and follows industry-standard coding conventions. Our focus on user experience ensures that every interaction is intuitive and meaningful."
-      ],
-      features: [
-        {
-          title: "Responsive Design",
-          description: "Works flawlessly across all devices and screen sizes"
-        },
-        {
-          title: "Real-time Updates",
-          description: "Instant data synchronization for collaborative features"
-        },
-        {
-          title: "Advanced Authentication",
-          description: "Secure user authentication with multi-factor support"
-        },
-        {
-          title: "Performance Optimized",
-          description: "Blazing fast load times and optimized resource usage"
-        },
-        {
-          title: "API Integration",
-          description: "Well-documented APIs for third-party integration"
-        },
-        {
-          title: "Scalable Architecture",
-          description: "Built to handle growth with microservices architecture"
-        },
-        {
-          title: "Security First",
-          description: "Implements latest security best practices and protocols"
-        },
-        {
-          title: "CI/CD Pipeline",
-          description: "Automated testing and deployment workflows"
-        }
-      ],
-      technical: {
-        frontend: {
-          title: "Frontend Development",
-          description: "Modern React-based frontend with state-of-the-art tooling",
-          technologies: ["React", "Redux", "TypeScript", "Styled Components", "Next.js", "React Query"]
-        },
-        backend: {
-          title: "Backend Services",
-          description: "Robust Node.js backend with GraphQL API",
-          technologies: ["Node.js", "Express", "GraphQL", "Apollo Server", "WebSocket", "Redis"]
-        },
-        database: {
-          title: "Database & Storage",
-          description: "Scalable data storage with caching",
-          technologies: ["MongoDB", "PostgreSQL", "Redis", "Amazon S3", "ElasticSearch"]
-        },
-        devops: {
-          title: "DevOps & Infrastructure",
-          description: "Cloud-native infrastructure with automated scaling",
-          technologies: ["Docker", "Kubernetes", "AWS", "Terraform", "Jenkins", "ELK Stack"]
-        }
-      }
-    },
-    implementation: {
-      sections: [
-        {
-          title: "Architecture Overview",
-          content: "The platform follows a microservices architecture, with each service handling specific business domains. This ensures high availability and independent scaling of components.",
-          details: [
-            "Service mesh for inter-service communication",
-            "Event-driven architecture for real-time features",
-            "Caching layers for improved performance",
-            "Load balancing and auto-scaling"
-          ]
-        },
-        {
-          title: "Development Approach",
-          content: "We follow an agile development methodology with continuous integration and deployment. This ensures rapid iterations and reliable releases.",
-          details: [
-            "Test-driven development",
-            "Automated CI/CD pipelines",
-            "Code quality checks",
-            "Regular security audits"
-          ]
-        },
-        {
-          title: "Performance Optimization",
-          content: "Performance is a key focus area, with optimizations at every layer of the stack.",
-          details: [
-            "Code splitting and lazy loading",
-            "Server-side rendering",
-            "Asset optimization",
-            "Database query optimization"
-          ]
-        }
-      ]
-    },
-    creator: {
-      name: "Sarah Johnson",
-      role: "Full Stack Developer",
-      avatar: "https://via.placeholder.com/50"
-    },
-    meta: {
-      author: "By Sarah Johnson",
-      date: "Updated March 15, 2024",
-      views: "2.5k views",
-      rating: "4.9/5 rating"
-    },
-    stats: {
-      views: "2.5k",
-      stars: "180",
-      forks: "45",
-      contributors: "12"
-    },
-    techStack: {
-      frontend: ["React", "Redux", "Styled Components", "TypeScript"],
-      backend: ["Node.js", "Express", "GraphQL"],
-      database: ["MongoDB", "Redis"],
-      devops: ["Docker", "AWS", "CI/CD", "Kubernetes"]
-    },
-    gallery: [
-      {
-        url: "https://source.unsplash.com/random/800x600?coding",
-        alt: "Modern development environment showing the React component structure"
-      },
-      {
-        url: "https://source.unsplash.com/random/800x600?technology",
-        alt: "Backend architecture diagram showcasing the microservices"
-      },
-      {
-        url: "https://source.unsplash.com/random/800x600?computer",
-        alt: "DevOps pipeline visualization with deployment stages"
-      }
-    ],
-    similarProjects: [
-      { title: "E-commerce Platform", link: "#", description: "A full-featured online shopping platform" },
-      { title: "Social Network App", link: "#", description: "Modern social networking application" },
-      { title: "Portfolio Builder", link: "#", description: "Professional portfolio creation tool" }
-    ]
+const NoResults = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+`;
+
+const TeamSection = styled.div`
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+`;
+
+const TeamHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const TeamAvatar = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--primary-color);
+`;
+
+const TeamInfo = styled.div`
+  flex: 1;
+`;
+
+const TeamName = styled(Link)`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const TeamMeta = styled.div`
+  font-size: 0.9rem;
+  color: var(--text-muted);
+`;
+
+const CreatorSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+`;
+
+const CreatorAvatar = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin-right: 1rem;
+`;
+
+const CreatorName = styled(Link)`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const CreatedAt = styled.div`
+  font-size: 0.9rem;
+  color: var(--text-muted);
+`;
+
+const ProjectDetails = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [project, setProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProjectDetails();
+  }, [id]);
+
+  const fetchProjectDetails = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const projectData = await projectsApi.getProject(id);
+      setProject(projectData);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+      setError('Failed to load project details');
+      toast.error('Failed to load project details. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) return <LoadingSpinner>Loading project details...</LoadingSpinner>;
+  if (error) return <NoResults>{error}</NoResults>;
+  if (!project) return <NoResults>Project not found</NoResults>;
+
+  // Parse technologies if it's a string
+  const technologies = Array.isArray(project.technologies)
+    ? project.technologies
+    : (typeof project.technologies === 'string'
+      ? JSON.parse(project.technologies || '[]')
+      : []);
+
+  const renderCreator = () => {
+    if (project.isTeamProject && project.Team) {
+      return (
+        <TeamSection>
+          <TeamHeader>
+            <TeamAvatar src={project.Team.avatar || '/default-team.png'} alt={project.Team.name} />
+            <TeamInfo>
+              <TeamName to={`/team/${project.Team.id}`}>{project.Team.name}</TeamName>
+              <TeamMeta>
+                Team Project • Led by {project.Team.leader?.username}
+              </TeamMeta>
+            </TeamInfo>
+          </TeamHeader>
+        </TeamSection>
+      );
+    }
+
+    return (
+      <CreatorSection>
+        <CreatorAvatar src={project.User?.avatar || '/default-avatar.png'} alt={project.User?.username} />
+        <CreatorInfo>
+          <CreatorName to={`/profile/${project.User?.id}`}>{project.User?.username}</CreatorName>
+          <CreatedAt>Created {formatDate(project.createdAt)}</CreatedAt>
+        </CreatorInfo>
+      </CreatorSection>
+    );
   };
 
   return (
@@ -743,21 +753,48 @@ const ProjectDetails = () => { // eslint-disable-next-line
             <HeroContent>
               <div className="project-info">
                 <ProjectTitle>{project.title}</ProjectTitle>
-                <ProjectSubtitle>{project.subtitle}</ProjectSubtitle>
+                <ProjectSubtitle>{project.shortDescription}</ProjectSubtitle>
                 <ProjectMeta>
-                  <span>👤 {project.meta.author}</span>
-                  <span>📅 {project.meta.date}</span>
-                  <span>👁️ {project.meta.views}</span>
-                  <span>⭐ {project.meta.rating}</span>
+                  <span>👤 By <Link to={`/profile/${project.user?.username}`}>{project.user?.username}</Link></span>
+                  <span>📅 {new Date(project.createdAt).toLocaleDateString()}</span>
+                  <span>👁️ {project.views} views</span>
+                  {project.likes > 0 && <span>⭐ {project.likes} likes</span>}
                 </ProjectMeta>
                 <ProjectActions>
-                  <ActionButton href="#" className="btn btn-primary">Live Demo</ActionButton>
-                  <ActionButton href="#" className="btn btn-secondary">Source Code</ActionButton>
-                  <ActionButton href="#" className="btn btn-outline">⭐ Star Project</ActionButton>
+                  {project.demoUrl && (
+                    <ActionButton
+                      className="primary"
+                      as="a"
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Live Demo
+                    </ActionButton>
+                  )}
+                  {project.repoUrl && (
+                    <ActionButton
+                      className="secondary"
+                      as="a"
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Source Code
+                    </ActionButton>
+                  )}
+                  {user && project?.userId === user.id && (
+                    <ActionButton
+                      className="secondary"
+                      onClick={() => navigate(`/project/${id}/edit`)}
+                    >
+                      Edit Project
+                    </ActionButton>
+                  )}
                 </ProjectActions>
               </div>
               <ProjectPreview>
-                <img src={project.preview} alt="Project Preview" />
+                <img src={project.thumbnail || '/default-project.png'} alt={project.title} />
               </ProjectPreview>
             </HeroContent>
           </div>
@@ -768,57 +805,67 @@ const ProjectDetails = () => { // eslint-disable-next-line
             <div className="project-main">
               <ProjectDescription>
                 <h2>About the Project</h2>
-                {project.description.overview.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+                <p>{project.description}</p>
 
-                <h2>Key Features</h2>
-                <FeaturesList>
-                  {project.description.features.map((feature, index) => (
-                    <li key={index}>
-                      <strong>{feature.title}</strong> - {feature.description}
-                    </li>
-                  ))}
-                </FeaturesList>
+                {project.keyFeatures?.length > 0 && (
+                  <>
+                    <h2>Key Features</h2>
+                    <FeaturesList>
+                      {project.keyFeatures.map((feature, index) => (
+                        <li key={index}>{feature}</li>
+                      ))}
+                    </FeaturesList>
+                  </>
+                )}
 
-                <h2>Technical Implementation</h2>
-                <TechStackSection>
-                  {Object.entries(project.description.technical).map(([key, section]) => (
-                    <div key={key} className="tech-category">
-                      <h3>{section.title}</h3>
-                      <p>{section.description}</p>
-                      <TechStack>
-                        {section.technologies.map((tech, index) => (
-                          <TechTag key={index}>{tech}</TechTag>
-                        ))}
-                      </TechStack>
-                    </div>
-                  ))}
-                </TechStackSection>
+                {(project.architecture || project.technicalImplementation || project.performanceOptimizations) && (
+                  <>
+                    <h2>Technical Implementation</h2>
+                    {project.architecture && (
+                      <div className="tech-category">
+                        <h3>Architecture Overview</h3>
+                        <p>{project.architecture}</p>
+                      </div>
+                    )}
+                    {project.technicalImplementation && (
+                      <div className="tech-category">
+                        <h3>Implementation Details</h3>
+                        <p>{project.technicalImplementation}</p>
+                      </div>
+                    )}
+                    {project.performanceOptimizations && (
+                      <div className="tech-category">
+                        <h3>Performance Optimizations</h3>
+                        <p>{project.performanceOptimizations}</p>
+                      </div>
+                    )}
+                  </>
+                )}
 
-                <h2>Implementation Details</h2>
-                <ImplementationSection>
-                  {project.implementation.sections.map((section, index) => (
-                    <div key={index} className="implementation-category">
-                      <h3>{section.title}</h3>
-                      <p>{section.content}</p>
-                      <ul>
-                        {section.details.map((detail, idx) => (
-                          <li key={idx}>{detail}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </ImplementationSection>
+                {technologies.length > 0 && (
+                  <>
+                    <h2>Technologies Used</h2>
+                    <TechStack>
+                      {technologies.map((tech, index) => (
+                        <TechTag key={index}>{tech}</TechTag>
+                      ))}
+                    </TechStack>
+                  </>
+                )}
 
-                <h2>Project Gallery</h2>
-                <GalleryGrid>
-                  {project.gallery.map((image, index) => (
-                    <GalleryItem key={index}>
-                      <img src={image.url} alt={image.alt} />
-                    </GalleryItem>
-                  ))}
-                </GalleryGrid>
+                {project.challengesFaced && (
+                  <>
+                    <h2>Challenges & Solutions</h2>
+                    <p>{project.challengesFaced}</p>
+                  </>
+                )}
+
+                {project.futurePlans && (
+                  <>
+                    <h2>Future Plans</h2>
+                    <p>{project.futurePlans}</p>
+                  </>
+                )}
               </ProjectDescription>
             </div>
 
@@ -827,46 +874,30 @@ const ProjectDetails = () => { // eslint-disable-next-line
                 <h3>Project Stats</h3>
                 <ProjectStats>
                   <StatItem>
-                    <StatValue>{project.stats.views}</StatValue>
+                    <StatValue>{project.views}</StatValue>
                     <StatLabel>Views</StatLabel>
                   </StatItem>
                   <StatItem>
-                    <StatValue>{project.stats.stars}</StatValue>
-                    <StatLabel>Stars</StatLabel>
+                    <StatValue>{project.likes}</StatValue>
+                    <StatLabel>Likes</StatLabel>
                   </StatItem>
-                  <StatItem>
-                    <StatValue>{project.stats.forks}</StatValue>
-                    <StatLabel>Forks</StatLabel>
-                  </StatItem>
-                  <StatItem>
-                    <StatValue>{project.stats.contributors}</StatValue>
-                    <StatLabel>Contributors</StatLabel>
-                  </StatItem>
+                  {project.commentsCount > 0 && (
+                    <StatItem>
+                      <StatValue>{project.commentsCount}</StatValue>
+                      <StatLabel>Comments</StatLabel>
+                    </StatItem>
+                  )}
                 </ProjectStats>
               </InfoCard>
 
-              <InfoCard>
-                <h3>Creator</h3>
-                <CreatorInfo>
-                  <img src={project.creator.avatar} alt={project.creator.name} />
-                  <div>
-                    <h4>{project.creator.name}</h4>
-                    <p>{project.creator.role}</p>
-                  </div>
-                </CreatorInfo>
-              </InfoCard>
+              {renderCreator()}
 
-              <InfoCard>
-                <h3>Similar Projects</h3>
-                <SimilarProjects>
-                  {project.similarProjects.map((proj, index) => (
-                    <a key={index} href={proj.link} className="project-link">
-                      <strong>{proj.title}</strong>
-                      <p>{proj.description}</p>
-                    </a>
-                  ))}
-                </SimilarProjects>
-              </InfoCard>
+              {project.category && (
+                <InfoCard>
+                  <h3>Category</h3>
+                  <p>{project.category}</p>
+                </InfoCard>
+              )}
             </ProjectSidebar>
           </ProjectContent>
         </section>

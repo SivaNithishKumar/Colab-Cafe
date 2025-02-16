@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // eslint-disable-next-line 
 import styled from 'styled-components';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { projectsApi } from '../services/projectsApi';
+import { toast } from 'react-toastify';
+import api from '../services/api';
 
 const ProjectsSection = styled.section`
   padding: 2rem 0;
@@ -122,155 +125,90 @@ const ProjectsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-  padding: 2rem 0;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.6s ease forwards;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
+  padding: 2rem;
 `;
 
-const ProjectCard = styled.article`
-  position: relative;
-  overflow: hidden;
+const FloatingActionButton = styled(Link)`
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #06b6d4 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 12px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.4s ease;
-    z-index: 2;
-  }
+  z-index: 1000;
+  text-decoration: none;
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
-
-    &::after {
-      transform: scaleX(1);
-    }
-  }
-`;
-
-const CardMedia = styled(Link)`
-  position: relative;
-  overflow: hidden;
-  display: block;
-  border-radius: 12px 12px 0 0;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      transparent 70%,
-      rgba(0, 0, 0, 0.5) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  ${ProjectCard}:hover & {
-    &::after {
-      opacity: 1;
-    }
-
-    img {
-      transform: scale(1.1);
-    }
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   }
 
   @media (max-width: 768px) {
-    img {
-      height: 200px;
-    }
+    bottom: 1.5rem;
+    right: 1.5rem;
   }
 `;
 
-const CardContent = styled.div`
+const ProjectCard = styled.div`
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  }
+`;
+
+const ProjectImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+`;
+
+const ProjectInfo = styled.div`
   padding: 1.5rem;
-  position: relative;
-  z-index: 1;
 `;
 
-const CardTitle = styled.h3`
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-
-  a {
-    color: var(--text-color);
-    text-decoration: none;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
+const ProjectTitle = styled.h3`
+  margin: 0 0 1rem;
+  color: var(--text-color);
+  font-size: 1.25rem;
 `;
 
-const CardDescription = styled.p`
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-`;
-
-const CardMeta = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+const ProjectDescription = styled.p`
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
 const TechStack = styled.div`
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
 `;
 
 const TechTag = styled.span`
-  font-size: 0.8rem;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--text-color);
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text-muted);
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-  }
+  font-size: 0.875rem;
 `;
 
 const CardLink = styled(Link)`
@@ -288,32 +226,68 @@ const CardLink = styled(Link)`
   }
 `;
 
+const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+`;
+
+const NoResults = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+`;
+
 const Projects = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilter, setActiveFilter] = useState('All');
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const projectsGridRef = useIntersectionObserver();
 
-  const filters = ['All', 'Web Development', 'Mobile Apps', 'UI/UX Design', 'Machine Learning'];
+  const filters = ['All', 'Web Development', 'Mobile Apps', 'AI & Machine Learning', 'Game Development'];
 
-  // Sample projects data - replace with your actual data
-  const projects = [
-    {
-      id: 1,
-      title: 'Modern Web Platform',
-      description: 'A sophisticated web platform built with cutting-edge technologies.',
-      image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80',
-      techStack: ['React', 'Node.js', 'GraphQL'],
-      category: 'Web Development'
-    },
-    // Add more projects as needed
-  ];
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const { projects: fetchedProjects } = await projectsApi.getProjects();
+      setProjects(Array.isArray(fetchedProjects) ? fetchedProjects : []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      setError('Failed to load projects');
+      toast.error('Failed to load projects. Please try again later.');
+      setProjects([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!project) return false;
+
+    const matchesSearch = (
+      project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (Array.isArray(project.technologies) && project.technologies.some(tech =>
+        tech?.toLowerCase().includes(searchTerm.toLowerCase())
+      ))
+    );
     const matchesFilter = activeFilter === 'All' || project.category === activeFilter;
     return matchesSearch && matchesFilter;
   });
+
+  if (isLoading) return <LoadingSpinner>Loading projects...</LoadingSpinner>;
+  if (error) return <NoResults>{error}</NoResults>;
 
   return (
     <ProjectsSection>
@@ -350,29 +324,52 @@ const Projects = () => {
 
       <section className="container">
         <ProjectsGrid ref={projectsGridRef}>
-          {filteredProjects.map(project => (
-            <ProjectCard key={project.id}>
-              <CardMedia to={`/project/${project.id}`}>
-                <img src={project.image} alt={project.title} />
-              </CardMedia>
-              <CardContent>
-                <CardTitle>
-                  <Link to={`/project/${project.id}`}>{project.title}</Link>
-                </CardTitle>
-                <CardDescription>{project.description}</CardDescription>
-                <CardMeta>
-                  <TechStack>
-                    {project.techStack.map(tech => (
-                      <TechTag key={tech}>{tech}</TechTag>
-                    ))}
-                  </TechStack>
-                  <CardLink to={`/project/${project.id}`}>View Details →</CardLink>
-                </CardMeta>
-              </CardContent>
-            </ProjectCard>
-          ))}
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map(project => {
+              // Ensure technologies is an array
+              const technologies = Array.isArray(project.technologies)
+                ? project.technologies
+                : (typeof project.technologies === 'string'
+                  ? JSON.parse(project.technologies || '[]')
+                  : []);
+
+              return (
+                <ProjectCard key={project.id}>
+                  <Link to={`/project/${project.id}`}>
+                    <ProjectImage
+                      src={project.thumbnail || '/default-project.png'}
+                      alt={project.title}
+                    />
+                    <ProjectInfo>
+                      <ProjectTitle>{project.title}</ProjectTitle>
+                      <ProjectDescription>
+                        {project.shortDescription || project.description.substring(0, 150)}
+                        {project.description.length > 150 && '...'}
+                      </ProjectDescription>
+                      <TechStack>
+                        {technologies.slice(0, 5).map((tech, index) => (
+                          <TechTag key={index}>{tech}</TechTag>
+                        ))}
+                        {technologies.length > 5 && (
+                          <TechTag>+{technologies.length - 5} more</TechTag>
+                        )}
+                      </TechStack>
+                    </ProjectInfo>
+                  </Link>
+                </ProjectCard>
+              );
+            })
+          ) : (
+            <NoResults>
+              No projects found matching your criteria
+            </NoResults>
+          )}
         </ProjectsGrid>
       </section>
+
+      <FloatingActionButton to="/project/upload" title="Add New Project">
+        +
+      </FloatingActionButton>
     </ProjectsSection>
   );
 };

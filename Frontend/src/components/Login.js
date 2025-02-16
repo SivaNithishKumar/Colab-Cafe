@@ -209,8 +209,25 @@ const Login = () => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    if (!formData.email.trim()) {
+      setError('Email is required');
+      return false;
+    }
+    if (!formData.password.trim()) {
+      setError('Password is required');
+      return false;
+    }
+    if (!formData.email.includes('@')) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+    return true;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -218,17 +235,27 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
+    setError(''); // Clear error when user types
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    if (!validateForm()) return;
 
-    const result = await login(formData.email, formData.password);
-    if (result.success) {
-      navigate('/profile');
-    } else {
-      setError(result.error);
+    try {
+      setIsSubmitting(true);
+      setError('');
+      const result = await login(formData.email, formData.password);
+
+      if (result.success) {
+        navigate('/profile');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -274,11 +301,12 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email"
+              disabled={isSubmitting}
               required
-              placeholder="you@example.com"
-              autoComplete="email"
             />
           </FormGroup>
+
           <FormGroup>
             <label htmlFor="password">Password</label>
             <input
@@ -287,21 +315,26 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              required
               placeholder="Enter your password"
-              autoComplete="current-password"
+              disabled={isSubmitting}
+              required
             />
           </FormGroup>
-          <FormGroup>
-            <ForgotPassword to="/forgot-password">Forgot password?</ForgotPassword>
-          </FormGroup>
-          <SubmitButton type="submit">
-            Log In
+
+          <ForgotPassword to="/forgot-password">
+            Forgot your password?
+          </ForgotPassword>
+
+          <SubmitButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Log In'}
           </SubmitButton>
         </form>
 
         <AuthFooter>
-          <p>Don't have an account? <Link to="/register">Sign up</Link></p>
+          <p>
+            Don't have an account?{' '}
+            <Link to="/register">Sign up</Link>
+          </p>
         </AuthFooter>
       </AuthContainer>
     </AuthPage>

@@ -9,13 +9,18 @@ export const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        checkAuth();
+    }, []);
+
+    const checkAuth = async () => {
         const token = localStorage.getItem('token');
         if (token) {
-            fetchUserProfile();
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            await fetchUserProfile();
         } else {
             setLoading(false);
         }
-    }, []);
+    };
 
     const fetchUserProfile = async () => {
         try {
@@ -24,55 +29,88 @@ export const AuthProvider = ({ children }) => {
             setError(null);
         } catch (error) {
             console.error('Error fetching user profile:', error);
-            localStorage.removeItem('token');
-            setError('Session expired. Please login again.');
+            handleAuthError(error);
         } finally {
             setLoading(false);
         }
     };
 
+    const handleAuthError = (error) => {
+        localStorage.removeItem('token');
+        delete api.defaults.headers.common['Authorization'];
+        setUser(null);
+        setError(error.response?.data?.error || 'Authentication failed');
+    };
+
     const login = async (email, password) => {
         try {
+            setError(null);
             const { data } = await api.post('/api/auth/login', {
                 email,
                 password
             });
 
             localStorage.setItem('token', data.token);
+            api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             setUser(data.user);
-            setError(null);
             return { success: true };
         } catch (error) {
             console.error('Login error:', error);
-            setError(error.response?.data?.error || 'Login failed');
+            const errorMessage = error.response?.data?.error || 'Login failed';
+            setError(errorMessage);
             return {
                 success: false,
-                error: error.response?.data?.error || 'Login failed'
+                error: errorMessage
             };
         }
     };
 
     const register = async (userData) => {
         try {
+            setError(null);
             const { data } = await api.post('/api/auth/register', userData);
             localStorage.setItem('token', data.token);
+            api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
             setUser(data.user);
-            setError(null);
             return { success: true };
         } catch (error) {
             console.error('Registration error:', error);
-            setError(error.response?.data?.error || 'Registration failed');
+            const errorMessage = error.response?.data?.error || 'Registration failed';
+            setError(errorMessage);
             return {
                 success: false,
-                error: error.response?.data?.error || 'Registration failed'
+                error: errorMessage
             };
         }
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        setError(null);
+    const logout = async () => {
+        try {
+            await api.post('/api/auth/logout');
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            localStorage.removeItem('token');
+            delete api.defaults.headers.common['Authorization'];
+            setUser(null);
+            setError(null);
+        }
+    };
+
+    const updateProfile = async (profileData) => {
+        try {
+            const { data } = await api.put('/api/users/profile', profileData);
+            setUser(data);
+            return { success: true };
+        } catch (error) {
+            console.error('Profile update error:', error);
+            const errorMessage = error.response?.data?.error || 'Failed to update profile';
+            setError(errorMessage);
+            return {
+                success: false,
+                error: errorMessage
+            };
+        }
     };
 
     const value = {
@@ -81,7 +119,9 @@ export const AuthProvider = ({ children }) => {
         error,
         login,
         register,
-        logout
+        logout,
+        updateProfile,
+        setError
     };
 
     return (

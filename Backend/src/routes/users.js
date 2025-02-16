@@ -17,8 +17,14 @@ router.get('/:username', async (req, res) => {
             include: [{
                 model: Project,
                 as: 'projects',
-                attributes: ['id', 'title', 'description', 'thumbnail', 'tags', 'likes', 'commentsCount', 'createdAt'],
-                required: false // Make this a LEFT JOIN
+                attributes: [
+                    'id', 'title', 'description', 'thumbnail',
+                    'category', 'technologies', 'repoUrl', 'demoUrl',
+                    'status', 'views', 'likes', 'commentsCount',
+                    'tags', 'createdAt'
+                ],
+                where: { status: 'published' },
+                required: false
             }]
         });
 
@@ -27,24 +33,17 @@ router.get('/:username', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Ensure all JSON fields are properly parsed and handle missing project data
+        // Parse JSON fields
         const userData = {
             ...user.toJSON(),
-            skills: typeof user.skills === 'string' ? JSON.parse(user.skills) : user.skills || [],
-            socialLinks: typeof user.socialLinks === 'string' ? JSON.parse(user.socialLinks) : user.socialLinks || {},
-            achievements: typeof user.achievements === 'string' ? JSON.parse(user.achievements) : user.achievements || [],
-            stats: typeof user.stats === 'string' ? JSON.parse(user.stats) : user.stats || {
-                projectsCount: 0,
-                collaborationsCount: 0,
-                contributionsCount: 0,
-                viewsCount: 0
-            },
+            skills: user.skills,
+            socialLinks: user.socialLinks,
+            achievements: user.achievements,
+            stats: user.stats,
             projects: (user.projects || []).map(project => ({
                 ...project,
-                thumbnail: project.thumbnail || null,
-                tags: typeof project.tags === 'string' ? JSON.parse(project.tags) : project.tags || [],
-                likes: project.likes || 0,
-                commentsCount: project.commentsCount || 0
+                technologies: project.technologies,
+                tags: project.tags
             }))
         };
 
@@ -64,7 +63,7 @@ router.put('/profile', auth, async (req, res) => {
     try {
         const allowedUpdates = [
             'bio', 'title', 'skills', 'socialLinks',
-            'avatar', 'username'
+            'avatar', 'username', 'achievements'
         ];
 
         const updates = {};
@@ -86,21 +85,28 @@ router.put('/profile', auth, async (req, res) => {
             include: [{
                 model: Project,
                 as: 'projects',
-                attributes: ['id', 'title', 'description', 'thumbnail', 'tags', 'likes', 'commentsCount', 'createdAt']
+                attributes: [
+                    'id', 'title', 'description', 'thumbnail',
+                    'category', 'technologies', 'repoUrl', 'demoUrl',
+                    'status', 'views', 'likes', 'commentsCount',
+                    'tags', 'createdAt'
+                ],
+                where: { status: 'published' },
+                required: false
             }]
         });
 
         const userData = {
             ...updatedUser.toJSON(),
-            skills: typeof updatedUser.skills === 'string' ? JSON.parse(updatedUser.skills) : updatedUser.skills || [],
-            socialLinks: typeof updatedUser.socialLinks === 'string' ? JSON.parse(updatedUser.socialLinks) : updatedUser.socialLinks || {},
-            achievements: typeof updatedUser.achievements === 'string' ? JSON.parse(updatedUser.achievements) : updatedUser.achievements || [],
-            stats: typeof updatedUser.stats === 'string' ? JSON.parse(updatedUser.stats) : updatedUser.stats || {
-                projectsCount: 0,
-                collaborationsCount: 0,
-                contributionsCount: 0,
-                viewsCount: 0
-            }
+            skills: updatedUser.skills,
+            socialLinks: updatedUser.socialLinks,
+            achievements: updatedUser.achievements,
+            stats: updatedUser.stats,
+            projects: (updatedUser.projects || []).map(project => ({
+                ...project,
+                technologies: project.technologies,
+                tags: project.tags
+            }))
         };
 
         res.json(userData);

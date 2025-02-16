@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const { sequelize, testConnection } = require('./config/database');
@@ -36,6 +37,16 @@ app.use(morgan('combined'));
 app.use(apiLimiter);
 app.use(securityMiddleware);
 
+// Create uploads directory if it doesn't exist
+const fs = require('fs');
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
@@ -46,6 +57,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/comments', require('./routes/comments'));
+app.use('/api/upload', require('./routes/upload'));
 
 // Error handling - must be last
 app.use(errorHandler);
@@ -62,7 +74,7 @@ const startServer = async () => {
     try {
         await testConnection();
 
-        // Sync all models with the database
+        // Force sync all models with the database
         await sequelize.sync();
         console.log('Database synced successfully');
 

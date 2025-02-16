@@ -204,19 +204,29 @@ const About = () => {
           <h2>Meet Our Team</h2>
           <TeamGrid>
             <TeamMember>
-              <TeamMemberImage src="https://via.placeholder.com/120" alt="Sarah Johnson" />
-              <h3>Sarah Johnson</h3>
+              <TeamMemberImage src="/assets/team/darkside.jpg" alt="Darkside" />
+              <h3>Darkside</h3>
               <p>Founder & CEO</p>
             </TeamMember>
             <TeamMember>
-              <TeamMemberImage src="https://via.placeholder.com/120" alt="Mike Chen" />
-              <h3>Mike Chen</h3>
+              <TeamMemberImage src="/assets/team/pradheeban.jpg" alt="Pradheeban" />
+              <h3>Pradheeban</h3>
               <p>Head of Engineering</p>
             </TeamMember>
             <TeamMember>
-              <TeamMemberImage src="https://via.placeholder.com/120" alt="Lisa Park" />
-              <h3>Lisa Park</h3>
+              <TeamMemberImage src="/assets/team/ananth.jpg" alt="Ananth Kumar" />
+              <h3>Ananth Kumar</h3>
               <p>Community Manager</p>
+            </TeamMember>
+            <TeamMember>
+              <TeamMemberImage src="/assets/team/barani.jpg" alt="Barani dharan" />
+              <h3>Barani dharan</h3>
+              <p>Lead Developer</p>
+            </TeamMember>
+            <TeamMember>
+              <TeamMemberImage src="/assets/team/sathish.jpg" alt="Sathish dk" />
+              <h3>Sathish dk</h3>
+              <p>UX Designer</p>
             </TeamMember>
           </TeamGrid>
 

@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, Navigate, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useParams, Navigate, Link, useNavigate } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 import { useAuth } from '../context/AuthContext';
-import { FaGithub, FaLinkedin, FaTwitter, FaGlobe, FaEdit, FaSave, FaTrophy, FaGraduationCap, FaStar, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaLinkedin, FaTwitter, FaGlobe, FaEdit, FaSave, FaTrophy, FaGraduationCap, FaStar, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import api from '../services/api';
+import { toast } from 'react-toastify';
+import { projectsApi } from '../services/projectsApi';
+import { teamsApi } from '../services/teamsApi';
 
 const gradientAnimation = keyframes`
   0% { background-position: 0% 50%; }
@@ -39,19 +42,20 @@ const ProfileHero = styled.section`
 `;
 
 const ProfileContent = styled.div`
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 2rem;
-  padding: 2rem;
+  grid-template-columns: 350px 1fr;
+  gap: 3rem;
+  padding: 3rem;
   animation: ${fadeIn} 0.6s ease-out;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     grid-template-columns: 1fr;
-    padding: 1rem;
+    padding: 1.5rem;
+    gap: 2rem;
   }
 `;
 
@@ -70,6 +74,11 @@ const ProfileSidebar = styled(GlassContainer)`
   top: 2rem;
   height: fit-content;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+
+  @media (max-width: 1024px) {
+    position: relative;
+    top: 0;
+  }
 `;
 
 const ProfileAvatar = styled.div`
@@ -143,7 +152,8 @@ const ProfileName = styled.h1`
 
 const EditableField = styled.div`
   position: relative;
-  display: inline-block;
+  width: 100%;
+  margin: 1rem 0;
 
   .edit-button {
     position: absolute;
@@ -156,6 +166,13 @@ const EditableField = styled.div`
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.2s;
+    padding: 0.5rem;
+    border-radius: 50%;
+
+    &:hover {
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary-color);
+    }
   }
 
   &:hover .edit-button {
@@ -164,22 +181,56 @@ const EditableField = styled.div`
 
   input, textarea {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 8px;
     background: var(--glass-bg);
     color: var(--text-color);
     font-size: inherit;
     font-family: inherit;
     resize: vertical;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
   }
 `;
 
 const ProfileTitle = styled.p`
   color: var(--text-color);
   opacity: 0.8;
-  margin-bottom: 1.5rem;
+  margin: 0.5rem 0 1.5rem;
   font-size: 1.1rem;
+  position: relative;
+  display: inline-block;
+  padding-right: 2rem;
+
+  .edit-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 0.5rem;
+    border-radius: 50%;
+
+    &:hover {
+      background: rgba(79, 70, 229, 0.1);
+      color: var(--primary-color);
+    }
+  }
+
+  &:hover .edit-button {
+    opacity: 1;
+  }
 `;
 
 const ProfileStats = styled.div`
@@ -199,13 +250,10 @@ const ProfileStat = styled(GlassContainer)`
   }
 `;
 
-const StatValue = styled.div`
+const ProfileStatValue = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
 `;
 
 const StatLabel = styled.div`
@@ -238,6 +286,25 @@ const SidebarSkills = styled.div`
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid var(--glass-border);
+  text-align: left;
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--glass-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+  }
 `;
 
 const SidebarTitle = styled.h2`
@@ -264,14 +331,14 @@ const SidebarTitle = styled.h2`
   }
 `;
 
-const SkillsGrid = styled.div`
+const SkillsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: flex-start;
 `;
 
-const SkillTag = styled.span`
+const SkillItem = styled.span`
   padding: 0.25rem 0.75rem;
   background: rgba(79, 70, 229, 0.1);
   border-radius: 15px;
@@ -305,6 +372,12 @@ const ProfileSection = styled(GlassContainer)`
   &:nth-child(1) { animation-delay: 0.1s; }
   &:nth-child(2) { animation-delay: 0.2s; }
   &:nth-child(3) { animation-delay: 0.3s; }
+
+  p {
+    line-height: 1.6;
+    color: var(--text-color);
+    opacity: 0.9;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -314,23 +387,31 @@ const SectionTitle = styled.h2`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 
   button {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+    background: var(--glass-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
     transition: all 0.3s;
 
     &:hover {
-      background: rgba(79, 70, 229, 0.1);
-      color: var(--primary-color);
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    svg {
+      font-size: 1rem;
     }
   }
 `;
@@ -376,46 +457,131 @@ const AchievementIcon = styled.div`
   animation: ${gradientAnimation} 5s ease infinite;
 `;
 
-const ProjectsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+const ProjectsSection = styled(ProfileSection)`
+  padding: 0;
+  overflow: hidden;
+`;
+
+const ProjectsContainer = styled.div`
+  position: relative;
+  padding: 2rem;
+  overflow: hidden;
+`;
+
+const ProjectsSlider = styled.div`
+  display: flex;
+  gap: 2rem;
+  transition: transform 0.3s ease;
+  padding: 0.5rem;
+  margin: 0 -1rem;
+
+  a {
+    pointer-events: auto;
+    text-decoration: none;
+  }
+`;
+
+const SliderButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  color: var(--text-color);
+  box-shadow: 0 4px 12px rgba(31, 38, 135, 0.1);
+
+  &:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  &.prev {
+    left: 1rem;
+  }
+
+  &.next {
+    right: 1rem;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
 `;
 
 const ProjectCard = styled(GlassContainer)`
-  padding: 1.5rem;
+  flex: 0 0 400px;
+  max-width: 400px;
+  padding: 0;
   transition: all 0.3s;
   position: relative;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(31, 38, 135, 0.15);
   }
 
+  .project-thumbnail {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  &:hover .project-thumbnail img {
+    transform: scale(1.05);
+  }
+
+  .project-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    margin: 0 0 1rem;
     color: var(--text-color);
+    font-weight: 600;
   }
 
   p {
     color: var(--text-muted);
     margin-bottom: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    flex: 1;
   }
 
-  .edit-buttons {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+  .project-stats {
     display: flex;
-    gap: 0.5rem;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  &:hover .edit-buttons {
-    opacity: 1;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
   }
 `;
 
@@ -457,13 +623,6 @@ const EditButton = styled.button`
   }
 `;
 
-const SaveButton = styled(EditButton)`
-  &:hover {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.1);
-  }
-`;
-
 const DeleteButton = styled(EditButton)`
   &:hover {
     color: #ef4444;
@@ -471,365 +630,1065 @@ const DeleteButton = styled(EditButton)`
   }
 `;
 
-const AddButton = styled.button`
-  width: 100%;
-  padding: 1rem;
-  border: 2px dashed var(--border-color);
-  border-radius: 12px;
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 1rem;
+const EditOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+`;
 
-  &:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background: rgba(79, 70, 229, 0.05);
+const EditModal = styled(GlassContainer)`
+  width: 90%;
+  max-width: 600px;
+  padding: 2rem;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
   }
 `;
 
+const EditForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  input, textarea {
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--glass-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s;
+
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+
+  &.primary {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+
+    &:hover {
+      background: var(--primary-color-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+  }
+
+  &.secondary {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+
+    &:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+  }
+`;
+
+const EditButtonsContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+`;
+
+const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &.save {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    
+    &:hover {
+      background: var(--primary-color-dark);
+      transform: translateY(-2px);
+    }
+  }
+  
+  &.cancel {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    
+    &:hover {
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+  }
+`;
+
+const SocialInputsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--glass-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: all 0.3s;
+    
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+  }
+`;
+
+const AddButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--primary-color);
+    background: rgba(79, 70, 229, 0.1);
+  }
+`;
+
+const EmptyState = styled.div`
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+
+  p {
+    margin-bottom: 1.5rem;
+  }
+
+  ${Button} {
+    margin: 0 auto;
+  }
+`;
+
+const TeamsSection = styled(ProfileSection)`
+  margin-top: 2rem;
+`;
+
+const TeamsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+`;
+
+const TeamCard = styled(GlassContainer)`
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
+
+const TeamHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const TeamAvatar = styled.img`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--primary-color);
+`;
+
+const TeamInfo = styled.div`
+  flex: 1;
+`;
+
+const TeamName = styled(Link)`
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const TeamRole = styled.div`
+  font-size: 0.9rem;
+  color: var(--text-muted);
+`;
+
+const TeamStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+`;
+
+const StatItem = styled.div`
+  text-align: center;
+`;
+
 const Profile = () => {
+  const { user: authUser, updateProfile } = useAuth();
   const { username } = useParams();
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(null);
+  const [userProjects, setUserProjects] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedProfile, setEditedProfile] = useState(null);
+  const [editData, setEditData] = useState({
+    bio: '',
+    title: '',
+    skills: [],
+    socialLinks: {
+      github: '',
+      linkedin: '',
+      twitter: '',
+      website: ''
+    }
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingField, setEditingField] = useState(null);
-  const [newSkill, setNewSkill] = useState('');
-  const isOwnProfile = user?.username === username;
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editMode, setEditMode] = useState(null);
+  const [modalData, setModalData] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const projectsPerPage = 3;
+  const sliderRef = useRef(null);
+  const [teams, setTeams] = useState([]);
 
-  useEffect(() => {
-    fetchProfileData();
-  }, [username]);
-
-  const fetchProfileData = async () => {
+  const fetchUserProfile = useCallback(async () => {
     try {
-      const targetUsername = username || user?.username;
+      setIsLoading(true);
+      const response = await api.get(`/api/users/${username || authUser?.username}`);
+      const userData = response.data;
+      setUser(userData);
 
-      if (!targetUsername) {
-        setError('No username provided');
-        return;
-      }
+      console.log('User ID:', userData.id); // Debug log
 
-      const response = await api.get(`/api/users/${targetUsername}`);
-      setProfile(response.data);
-      setEditedProfile(response.data);
-      setError(null);
+      setEditData({
+        bio: userData.bio || '',
+        title: userData.title || '',
+        skills: userData.skills || [],
+        socialLinks: userData.socialLinks || {
+          github: '',
+          linkedin: '',
+          twitter: '',
+          website: ''
+        }
+      });
+
+      // Fetch only the projects created by this user
+      const projectsResponse = await projectsApi.getProjects();
+      console.log('All projects:', projectsResponse.projects); // Debug log
+
+      // Filter projects on the client side to ensure we only get this user's projects
+      const userProjects = projectsResponse.projects.filter(project => project.userId === userData.id);
+      console.log('Filtered user projects:', userProjects); // Debug log
+
+      setUserProjects(userProjects || []);
     } catch (error) {
       console.error('Error fetching profile:', error);
-      setError(error.response?.data?.message || 'Failed to load profile');
-      if (error.response?.status === 404) {
-        navigate('/404');
-      }
+      setError('Failed to load profile');
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [username, authUser?.username]);
 
-  const handleEdit = (field) => {
-    setEditingField(field);
-  };
-
-  const handleSave = async (field) => {
+  const fetchUserTeams = async () => {
     try {
-      await api.patch(`/api/users/${profile.username}`, {
-        [field]: editedProfile[field]
-      });
-      setProfile(editedProfile);
-      setEditingField(null);
+      const teamsData = await teamsApi.getUserTeams();
+      setTeams(teamsData);
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error('Error fetching user teams:', error);
+      toast.error('Failed to load teams');
     }
   };
 
-  const handleChange = (field, value) => {
-    setEditedProfile(prev => ({
+  useEffect(() => {
+    fetchUserProfile();
+    fetchUserTeams();
+  }, [fetchUserProfile, fetchUserTeams]);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditData({
+      bio: user.bio || '',
+      title: user.title || '',
+      skills: user.skills || [],
+      socialLinks: user.socialLinks || {
+        github: '',
+        linkedin: '',
+        twitter: '',
+        website: ''
+      }
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      const result = await updateProfile(editData);
+      if (result.success) {
+        setUser(prev => ({ ...prev, ...editData }));
+        setIsEditing(false);
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('Failed to update profile');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditData(prev => ({
       ...prev,
-      [field]: value
+      [name]: value
     }));
   };
 
-  const handleAddSkill = async () => {
-    if (!newSkill.trim()) return;
-    try {
-      const updatedSkills = [...(profile.skills || []), newSkill.trim()];
-      await api.patch(`/api/users/${profile.username}`, {
-        skills: updatedSkills
-      });
-      setProfile(prev => ({
+  const handleSocialLinkChange = (platform, value) => {
+    setEditData(prev => ({
+      ...prev,
+      socialLinks: {
+        ...prev.socialLinks,
+        [platform]: value
+      }
+    }));
+  };
+
+  const handleSkillAdd = (skill) => {
+    if (!editData.skills.includes(skill)) {
+      setEditData(prev => ({
         ...prev,
-        skills: updatedSkills
+        skills: [...prev.skills, skill]
       }));
-      setNewSkill('');
-    } catch (error) {
-      console.error('Error adding skill:', error);
     }
   };
 
-  const handleRemoveSkill = async (skillToRemove) => {
+  const handleSkillRemove = (skillToRemove) => {
+    setEditData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }));
+  };
+
+  const openEditModal = (mode, data = null) => {
+    setEditMode(mode);
+    setModalData(data);
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setEditMode(null);
+    setModalData(null);
+  };
+
+  const handleAddAchievement = () => {
+    const newAchievement = {
+      type: 'award',
+      title: 'New Achievement',
+      description: 'Click edit to modify this achievement'
+    };
+    openEditModal('achievement', newAchievement);
+  };
+
+  const handleAddProject = () => {
+    const newProject = {
+      title: 'New Project',
+      description: 'Click edit to modify this project',
+      technologies: []
+    };
+    openEditModal('project', newProject);
+  };
+
+  const handleModalSave = async () => {
     try {
-      const updatedSkills = profile.skills.filter(skill => skill !== skillToRemove);
-      await api.patch(`/api/users/${profile.username}`, {
-        skills: updatedSkills
-      });
-      setProfile(prev => ({
-        ...prev,
-        skills: updatedSkills
-      }));
+      if (editMode === 'achievement') {
+        const updatedAchievements = [...(user.achievements || [])];
+        if (modalData.id) {
+          const index = updatedAchievements.findIndex(a => a.id === modalData.id);
+          updatedAchievements[index] = modalData;
+        } else {
+          updatedAchievements.push(modalData);
+        }
+        await updateProfile({ achievements: updatedAchievements });
+        setUser(prev => ({ ...prev, achievements: updatedAchievements }));
+      } else if (editMode === 'project') {
+        const updatedProjects = [...(user.projects || [])];
+        const projectData = {
+          ...modalData,
+          technologies: Array.isArray(modalData.technologies) ? modalData.technologies : []
+        };
+        if (modalData.id) {
+          const index = updatedProjects.findIndex(p => p.id === modalData.id);
+          updatedProjects[index] = projectData;
+        } else {
+          updatedProjects.push(projectData);
+        }
+        await updateProfile({ projects: updatedProjects });
+        setUser(prev => ({ ...prev, projects: updatedProjects }));
+      }
+      closeEditModal();
     } catch (error) {
-      console.error('Error removing skill:', error);
+      setError('Failed to save changes');
     }
   };
 
-  const handleAddAchievement = async () => {
+  const handleDeleteAchievement = async (id) => {
     try {
-      const newAchievement = {
-        type: 'award',
-        title: 'New Achievement',
-        description: 'Click edit to modify this achievement'
-      };
-      const updatedAchievements = [...(profile.achievements || []), newAchievement];
-      await api.patch(`/api/users/${profile.username}`, {
-        achievements: updatedAchievements
-      });
-      setProfile(prev => ({
-        ...prev,
-        achievements: updatedAchievements
-      }));
+      const updatedAchievements = user.achievements.filter(a => a.id !== id);
+      await updateProfile({ achievements: updatedAchievements });
+      setUser(prev => ({ ...prev, achievements: updatedAchievements }));
     } catch (error) {
-      console.error('Error adding achievement:', error);
+      setError('Failed to delete achievement');
     }
   };
 
-  const handleAddProject = async () => {
+  const handleDeleteProject = async (id) => {
     try {
-      const newProject = {
-        title: 'New Project',
-        description: 'Click edit to modify this project',
-        technologies: []
-      };
-      const updatedProjects = [...(profile.projects || []), newProject];
-      await api.patch(`/api/users/${profile.username}`, {
-        projects: updatedProjects
-      });
-      setProfile(prev => ({
-        ...prev,
-        projects: updatedProjects
-      }));
+      const updatedProjects = user.projects.filter(p => p.id !== id);
+      await updateProfile({ projects: updatedProjects });
+      setUser(prev => ({ ...prev, projects: updatedProjects }));
     } catch (error) {
-      console.error('Error adding project:', error);
+      setError('Failed to delete project');
     }
   };
+
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image size should be less than 2MB');
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.match(/^image\/(jpeg|png|gif)$/)) {
+        toast.error('Only JPG, PNG, and GIF images are allowed');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await api.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        if (response.data.url) {
+          // Get the full URL by combining the backend URL with the path
+          const fullImageUrl = `${process.env.REACT_APP_API_URL}${response.data.url}`;
+
+          // Update user profile with new avatar URL
+          const result = await updateProfile({ avatar: fullImageUrl });
+          if (result.success) {
+            setUser(prev => ({
+              ...prev,
+              avatar: fullImageUrl
+            }));
+            toast.success('Profile picture updated successfully!');
+          }
+        }
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+        toast.error('Failed to update profile picture. Please try again.');
+      }
+    }
+  };
+
+  const handleNextSlide = () => {
+    const maxSlides = Math.max(0, userProjects.length - projectsPerPage);
+    setCurrentSlide(prev => Math.min(prev + 1, maxSlides));
+  };
+
+  const handlePrevSlide = () => {
+    setCurrentSlide(prev => Math.max(0, prev - 1));
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (!profile) {
-    return <div>Loading...</div>;
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
+  const isOwnProfile = authUser?.username === user.username;
+
   return (
-    <ProfileHero>
-      <ProfileContent>
-        <ProfileSidebar>
-          <ProfileAvatar>
-            <img
-              src={profile.avatar || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234f46e5'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"}
-              alt={profile.name}
-            />
-            {isOwnProfile && (
-              <div className="edit-overlay">
-                <FaEdit />
-              </div>
-            )}
-          </ProfileAvatar>
-
-          <EditableField>
-            {editingField === 'name' ? (
-              <>
-                <input
-                  value={editedProfile.name}
-                  onChange={(e) => handleChange('name', e.target.value)}
-                  onBlur={() => handleSave('name')}
-                  autoFocus
-                />
-                <SaveButton onClick={() => handleSave('name')}><FaSave /></SaveButton>
-              </>
-            ) : (
-              <ProfileName>
-                {profile.name}
-                {isOwnProfile && (
-                  <EditButton onClick={() => handleEdit('name')}><FaEdit /></EditButton>
-                )}
-              </ProfileName>
-            )}
-          </EditableField>
-
-          <EditableField>
-            {editingField === 'title' ? (
-              <>
-                <input
-                  value={editedProfile.title}
-                  onChange={(e) => handleChange('title', e.target.value)}
-                  onBlur={() => handleSave('title')}
-                  autoFocus
-                />
-                <SaveButton onClick={() => handleSave('title')}><FaSave /></SaveButton>
-              </>
-            ) : (
-              <ProfileTitle>
-                {profile.title}
-                {isOwnProfile && (
-                  <EditButton onClick={() => handleEdit('title')}><FaEdit /></EditButton>
-                )}
-              </ProfileTitle>
-            )}
-          </EditableField>
-
-          <ProfileStats>
-            <ProfileStat>
-              <StatValue>{profile.projectCount || 0}</StatValue>
-              <StatLabel>Projects</StatLabel>
-            </ProfileStat>
-            <ProfileStat>
-              <StatValue>{profile.followerCount || 0}</StatValue>
-              <StatLabel>Followers</StatLabel>
-            </ProfileStat>
-          </ProfileStats>
-
-          <ProfileSocial>
-            {profile.github && <SocialLink href={profile.github} target="_blank"><FaGithub /></SocialLink>}
-            {profile.linkedin && <SocialLink href={profile.linkedin} target="_blank"><FaLinkedin /></SocialLink>}
-            {profile.twitter && <SocialLink href={profile.twitter} target="_blank"><FaTwitter /></SocialLink>}
-            {profile.website && <SocialLink href={profile.website} target="_blank"><FaGlobe /></SocialLink>}
-          </ProfileSocial>
-
-          <SidebarSkills>
-            <SidebarTitle>
-              Skills
+    <main>
+      <ProfileHero>
+        <ProfileContent>
+          <ProfileSidebar>
+            <ProfileAvatar>
+              <img src={user.avatar || '/default-avatar.png'} alt={user.username} />
               {isOwnProfile && (
-                <button onClick={() => setEditingField('skills')}>
-                  <FaEdit />
-                </button>
-              )}
-            </SidebarTitle>
-            <SkillsGrid>
-              {profile.skills?.map((skill, index) => (
-                <SkillTag key={index}>
-                  {skill}
-                  {isOwnProfile && editingField === 'skills' && (
-                    <span className="remove-skill" onClick={() => handleRemoveSkill(skill)}>
-                      <FaTimes />
-                    </span>
-                  )}
-                </SkillTag>
-              ))}
-            </SkillsGrid>
-            {isOwnProfile && editingField === 'skills' && (
-              <div style={{ marginTop: '1rem' }}>
-                <input
-                  value={newSkill}
-                  onChange={(e) => setNewSkill(e.target.value)}
-                  placeholder="Add a new skill"
-                  onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
-                />
-                <SaveButton onClick={handleAddSkill}><FaSave /></SaveButton>
-              </div>
-            )}
-          </SidebarSkills>
-        </ProfileSidebar>
-
-        <ProfileMain>
-          <ProfileSection>
-            <SectionTitle>
-              About Me
-              {isOwnProfile && (
-                <button onClick={() => handleEdit('bio')}>
-                  <FaEdit /> Edit
-                </button>
-              )}
-            </SectionTitle>
-            <EditableField>
-              {editingField === 'bio' ? (
                 <>
-                  <textarea
-                    value={editedProfile.bio}
-                    onChange={(e) => handleChange('bio', e.target.value)}
-                    onBlur={() => handleSave('bio')}
-                    autoFocus
+                  <input
+                    type="file"
+                    id="avatarUpload"
+                    hidden
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
                   />
-                  <SaveButton onClick={() => handleSave('bio')}><FaSave /></SaveButton>
+                  <div
+                    className="edit-overlay"
+                    onClick={() => document.getElementById('avatarUpload').click()}
+                  >
+                    <FaEdit />
+                  </div>
                 </>
-              ) : (
-                <p>{profile.bio}</p>
               )}
-            </EditableField>
-          </ProfileSection>
+            </ProfileAvatar>
 
-          <ProfileSection>
-            <SectionTitle>
-              Achievements
-              {isOwnProfile && (
-                <button onClick={handleAddAchievement}>
-                  <FaEdit /> Add Achievement
-                </button>
-              )}
-            </SectionTitle>
-            <AchievementsGrid>
-              {profile.achievements?.map((achievement, index) => (
-                <AchievementCard key={index}>
-                  {isOwnProfile && (
-                    <div className="edit-buttons">
-                      <EditButton><FaEdit /></EditButton>
-                      <DeleteButton><FaTimes /></DeleteButton>
-                    </div>
-                  )}
-                  <AchievementIcon>
-                    {achievement.type === 'award' && <FaTrophy />}
-                    {achievement.type === 'certification' && <FaGraduationCap />}
-                    {achievement.type === 'contribution' && <FaStar />}
-                  </AchievementIcon>
-                  <h3>{achievement.title}</h3>
-                  <p>{achievement.description}</p>
-                </AchievementCard>
-              ))}
-            </AchievementsGrid>
-          </ProfileSection>
+            <ProfileName>{user.username}</ProfileName>
 
-          <ProfileSection>
-            <SectionTitle>
-              Featured Projects
-              {isOwnProfile && (
-                <button onClick={handleAddProject}>
-                  <FaEdit /> Add Project
-                </button>
-              )}
-            </SectionTitle>
-            <ProjectsGrid>
-              {profile.projects?.map((project, index) => (
-                <ProjectCard key={index}>
-                  {isOwnProfile && (
-                    <div className="edit-buttons">
-                      <EditButton><FaEdit /></EditButton>
-                      <DeleteButton><FaTimes /></DeleteButton>
-                    </div>
-                  )}
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <CardTags>
-                    {project.technologies?.map((tech, techIndex) => (
-                      <span key={techIndex}>{tech}</span>
+            {isEditing ? (
+              <>
+                <EditableField>
+                  <input
+                    type="text"
+                    name="title"
+                    value={editData.title}
+                    onChange={handleInputChange}
+                    placeholder="Your title"
+                  />
+                </EditableField>
+
+                <ProfileStats>
+                  <ProfileStat>
+                    <ProfileStatValue>{user.stats?.projectsCount || 0}</ProfileStatValue>
+                    <StatLabel>Projects</StatLabel>
+                  </ProfileStat>
+                  <ProfileStat>
+                    <ProfileStatValue>{user.stats?.contributionsCount || 0}</ProfileStatValue>
+                    <StatLabel>Contributions</StatLabel>
+                  </ProfileStat>
+                </ProfileStats>
+
+                <EditableField>
+                  <textarea
+                    name="bio"
+                    value={editData.bio}
+                    onChange={handleInputChange}
+                    placeholder="Tell us about yourself"
+                    rows="4"
+                  />
+                </EditableField>
+
+                <SidebarSkills>
+                  <SidebarTitle>Skills</SidebarTitle>
+                  <SkillsContainer>
+                    {editData.skills.map((skill, index) => (
+                      <SkillItem key={index}>
+                        {skill}
+                        <button
+                          onClick={() => handleSkillRemove(skill)}
+                          style={{ marginLeft: '0.5rem', cursor: 'pointer' }}
+                        >
+                          <FaTimes />
+                        </button>
+                      </SkillItem>
                     ))}
-                  </CardTags>
-                </ProjectCard>
-              ))}
-            </ProjectsGrid>
-          </ProfileSection>
-        </ProfileMain>
-      </ProfileContent>
-    </ProfileHero>
+                  </SkillsContainer>
+                  <input
+                    type="text"
+                    placeholder="Type a skill and press Enter"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSkillAdd(e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                    style={{ marginTop: '1rem' }}
+                  />
+                </SidebarSkills>
+
+                <SocialInputsContainer>
+                  <input
+                    type="url"
+                    placeholder="GitHub URL"
+                    value={editData.socialLinks.github}
+                    onChange={(e) => handleSocialLinkChange('github', e.target.value)}
+                  />
+                  <input
+                    type="url"
+                    placeholder="LinkedIn URL"
+                    value={editData.socialLinks.linkedin}
+                    onChange={(e) => handleSocialLinkChange('linkedin', e.target.value)}
+                  />
+                  <input
+                    type="url"
+                    placeholder="Twitter URL"
+                    value={editData.socialLinks.twitter}
+                    onChange={(e) => handleSocialLinkChange('twitter', e.target.value)}
+                  />
+                  <input
+                    type="url"
+                    placeholder="Website URL"
+                    value={editData.socialLinks.website}
+                    onChange={(e) => handleSocialLinkChange('website', e.target.value)}
+                  />
+                </SocialInputsContainer>
+
+                <EditButtonsContainer>
+                  <ActionButton className="save" onClick={handleSave}>
+                    <FaSave /> Save Changes
+                  </ActionButton>
+                  <ActionButton className="cancel" onClick={handleCancel}>
+                    <FaTimes /> Cancel
+                  </ActionButton>
+                </EditButtonsContainer>
+              </>
+            ) : (
+              <>
+                <ProfileTitle>
+                  {user.title}
+                  {isOwnProfile && (
+                    <button className="edit-button" onClick={handleEdit}>
+                      <FaEdit />
+                    </button>
+                  )}
+                </ProfileTitle>
+
+                <ProfileStats>
+                  <ProfileStat>
+                    <ProfileStatValue>{user.stats?.projectsCount || 0}</ProfileStatValue>
+                    <StatLabel>Projects</StatLabel>
+                  </ProfileStat>
+                  <ProfileStat>
+                    <ProfileStatValue>{user.stats?.contributionsCount || 0}</ProfileStatValue>
+                    <StatLabel>Contributions</StatLabel>
+                  </ProfileStat>
+                </ProfileStats>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                  {user.bio || 'No bio added yet'}
+                  {isOwnProfile && (
+                    <button className="edit-button" onClick={handleEdit}>
+                      <FaEdit />
+                    </button>
+                  )}
+                </div>
+
+                <SidebarSkills>
+                  <SidebarTitle>
+                    Skills
+                    {isOwnProfile && (
+                      <button className="edit-button" onClick={handleEdit}>
+                        <FaEdit />
+                      </button>
+                    )}
+                  </SidebarTitle>
+                  <SkillsContainer>
+                    {user.skills?.map((skill, index) => (
+                      <SkillItem key={index}>{skill}</SkillItem>
+                    ))}
+                    {(!user.skills || user.skills.length === 0) && (
+                      <div style={{ color: 'var(--text-muted)' }}>No skills added yet</div>
+                    )}
+                  </SkillsContainer>
+                </SidebarSkills>
+
+                <ProfileSocial>
+                  {user.socialLinks?.github && (
+                    <SocialLink href={user.socialLinks.github} target="_blank" rel="noopener noreferrer">
+                      <FaGithub />
+                    </SocialLink>
+                  )}
+                  {user.socialLinks?.linkedin && (
+                    <SocialLink href={user.socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                      <FaLinkedin />
+                    </SocialLink>
+                  )}
+                  {user.socialLinks?.twitter && (
+                    <SocialLink href={user.socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+                      <FaTwitter />
+                    </SocialLink>
+                  )}
+                  {user.socialLinks?.website && (
+                    <SocialLink href={user.socialLinks.website} target="_blank" rel="noopener noreferrer">
+                      <FaGlobe />
+                    </SocialLink>
+                  )}
+                  {isOwnProfile && (
+                    <button className="edit-button" onClick={handleEdit}>
+                      <FaEdit />
+                    </button>
+                  )}
+                </ProfileSocial>
+              </>
+            )}
+          </ProfileSidebar>
+
+          <ProfileMain>
+            <ProfileSection>
+              <SectionTitle>
+                About Me
+                {isOwnProfile && (
+                  <button onClick={() => handleEdit()}>
+                    <FaEdit /> Edit Profile
+                  </button>
+                )}
+              </SectionTitle>
+              <p>{user.bio}</p>
+            </ProfileSection>
+
+            <ProfileSection>
+              <SectionTitle>
+                Achievements
+                {isOwnProfile && (
+                  <button onClick={handleAddAchievement}>
+                    <FaEdit /> Add Achievement
+                  </button>
+                )}
+              </SectionTitle>
+              <AchievementsGrid>
+                {user.achievements?.map((achievement, index) => (
+                  <AchievementCard key={index}>
+                    {isOwnProfile && (
+                      <div className="edit-buttons">
+                        <EditButton onClick={() => openEditModal('achievement', achievement)}>
+                          <FaEdit />
+                        </EditButton>
+                        <DeleteButton onClick={() => handleDeleteAchievement(achievement.id)}>
+                          <FaTimes />
+                        </DeleteButton>
+                      </div>
+                    )}
+                    <AchievementIcon>
+                      {achievement.type === 'award' && <FaTrophy />}
+                      {achievement.type === 'certification' && <FaGraduationCap />}
+                      {achievement.type === 'contribution' && <FaStar />}
+                    </AchievementIcon>
+                    <h3>{achievement.title}</h3>
+                    <p>{achievement.description}</p>
+                  </AchievementCard>
+                ))}
+              </AchievementsGrid>
+            </ProfileSection>
+
+            <ProjectsSection>
+              <SectionTitle>
+                Featured Projects
+                {isOwnProfile && (
+                  <Button
+                    className="primary"
+                    onClick={() => navigate('/project/upload')}
+                  >
+                    Add New Project
+                  </Button>
+                )}
+              </SectionTitle>
+              <ProjectsContainer>
+                {userProjects.length > 0 ? (
+                  <>
+                    {userProjects.length > projectsPerPage && (
+                      <>
+                        <SliderButton
+                          className="prev"
+                          onClick={handlePrevSlide}
+                          disabled={currentSlide === 0}
+                        >
+                          <FaChevronLeft />
+                        </SliderButton>
+                        <SliderButton
+                          className="next"
+                          onClick={handleNextSlide}
+                          disabled={currentSlide >= userProjects.length - projectsPerPage}
+                        >
+                          <FaChevronRight />
+                        </SliderButton>
+                      </>
+                    )}
+                    <ProjectsSlider
+                      ref={sliderRef}
+                      style={{
+                        transform: `translateX(${-currentSlide * 432}px)`,
+                      }}
+                    >
+                      {userProjects.map((project) => (
+                        <ProjectCard key={project.id}>
+                          <Link to={`/project/${project.id}`}>
+                            <div className="project-thumbnail">
+                              <img
+                                src={project.thumbnail ? `${process.env.REACT_APP_API_URL}${project.thumbnail}` : '/default-project.png'}
+                                alt={project.title}
+                              />
+                            </div>
+                            <div className="project-content">
+                              <h3>{project.title}</h3>
+                              <p>
+                                {project.shortDescription ||
+                                  (project.description && project.description.substring(0, 150)) ||
+                                  'No description available'}
+                                {(project.shortDescription?.length > 150 || (project.description?.length > 150)) && '...'}
+                              </p>
+                              <CardTags>
+                                {Array.isArray(project.technologies) ? (
+                                  project.technologies.slice(0, 4).map((tech, techIndex) => (
+                                    <span key={techIndex}>{tech}</span>
+                                  ))
+                                ) : (
+                                  typeof project.technologies === 'string' && project.technologies ? (
+                                    JSON.parse(project.technologies).slice(0, 4).map((tech, techIndex) => (
+                                      <span key={techIndex}>{tech}</span>
+                                    ))
+                                  ) : []
+                                )}
+                                {Array.isArray(project.technologies) && project.technologies.length > 4 && (
+                                  <span>+{project.technologies.length - 4} more</span>
+                                )}
+                              </CardTags>
+                              <div className="project-stats">
+                                <span>👁️ {project.views || 0}</span>
+                                <span>⭐ {project.likes || 0}</span>
+                                {project.commentsCount > 0 && <span>💬 {project.commentsCount}</span>}
+                              </div>
+                            </div>
+                          </Link>
+                        </ProjectCard>
+                      ))}
+                    </ProjectsSlider>
+                  </>
+                ) : (
+                  <EmptyState>
+                    <p>{isOwnProfile ? 'You haven\'t created any projects yet' : 'This user hasn\'t created any projects yet'}</p>
+                    {isOwnProfile && (
+                      <Button
+                        className="primary"
+                        onClick={() => navigate('/project/upload')}
+                      >
+                        Create Your First Project
+                      </Button>
+                    )}
+                  </EmptyState>
+                )}
+              </ProjectsContainer>
+            </ProjectsSection>
+
+            <TeamsSection>
+              <SectionTitle>
+                Teams
+                {isOwnProfile && (
+                  <Button
+                    className="primary"
+                    onClick={() => navigate('/team/create')}
+                  >
+                    Create Team
+                  </Button>
+                )}
+              </SectionTitle>
+
+              <TeamsContainer>
+                {teams.map(team => (
+                  <TeamCard key={team.id}>
+                    <TeamHeader>
+                      <TeamAvatar src={team.avatar || '/default-team.png'} alt={team.name} />
+                      <TeamInfo>
+                        <TeamName to={`/team/${team.id}`}>{team.name}</TeamName>
+                        <TeamRole>
+                          {team.leaderId === user.id ? 'Team Leader' : 'Team Member'}
+                        </TeamRole>
+                      </TeamInfo>
+                    </TeamHeader>
+                    <TeamStats>
+                      <StatItem>
+                        <ProfileStatValue>{team.stats?.projectCount || 0}</ProfileStatValue>
+                        <StatLabel>Projects</StatLabel>
+                      </StatItem>
+                      <StatItem>
+                        <ProfileStatValue>{team.stats?.memberCount || 0}</ProfileStatValue>
+                        <StatLabel>Members</StatLabel>
+                      </StatItem>
+                    </TeamStats>
+                  </TeamCard>
+                ))}
+                {teams.length === 0 && (
+                  <EmptyState>
+                    {isOwnProfile
+                      ? "You haven't joined any teams yet. Create or join a team to collaborate with others!"
+                      : "This user hasn't joined any teams yet."}
+                  </EmptyState>
+                )}
+              </TeamsContainer>
+            </TeamsSection>
+          </ProfileMain>
+        </ProfileContent>
+      </ProfileHero>
+
+      {showEditModal && (
+        <EditOverlay>
+          <EditModal>
+            <h2>{editMode === 'achievement' ? 'Edit Achievement' : 'Edit Project'}</h2>
+            <EditForm onSubmit={(e) => {
+              e.preventDefault();
+              handleModalSave();
+            }}>
+              <FormGroup>
+                <label>Title</label>
+                <input
+                  type="text"
+                  value={modalData.title}
+                  onChange={(e) => setModalData({ ...modalData, title: e.target.value })}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Description</label>
+                <textarea
+                  value={modalData.description}
+                  onChange={(e) => setModalData({ ...modalData, description: e.target.value })}
+                  required
+                />
+              </FormGroup>
+              {editMode === 'achievement' && (
+                <FormGroup>
+                  <label>Type</label>
+                  <select
+                    value={modalData.type}
+                    onChange={(e) => setModalData({ ...modalData, type: e.target.value })}
+                  >
+                    <option value="award">Award</option>
+                    <option value="certification">Certification</option>
+                    <option value="contribution">Contribution</option>
+                  </select>
+                </FormGroup>
+              )}
+              {editMode === 'project' && (
+                <FormGroup>
+                  <label>Technologies</label>
+                  <input
+                    type="text"
+                    placeholder="Add technologies (comma-separated)"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const techs = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+                        setModalData({
+                          ...modalData,
+                          technologies: [...(Array.isArray(modalData.technologies) ? modalData.technologies : []), ...techs]
+                        });
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                  <div style={{ marginTop: '0.5rem' }}>
+                    {Array.isArray(modalData.technologies) && modalData.technologies.map((tech, index) => (
+                      <span key={index} style={{ marginRight: '0.5rem' }}>
+                        {tech}
+                        <button
+                          onClick={() => {
+                            const newTechs = modalData.technologies.filter((_, i) => i !== index);
+                            setModalData({ ...modalData, technologies: newTechs });
+                          }}
+                          style={{ marginLeft: '0.25rem', cursor: 'pointer' }}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                </FormGroup>
+              )}
+              <ButtonGroup>
+                <Button type="button" className="secondary" onClick={closeEditModal}>
+                  Cancel
+                </Button>
+                <Button type="submit" className="primary">
+                  Save Changes
+                </Button>
+              </ButtonGroup>
+            </EditForm>
+          </EditModal>
+        </EditOverlay>
+      )}
+    </main>
   );
 };
 

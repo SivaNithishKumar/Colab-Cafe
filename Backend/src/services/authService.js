@@ -4,6 +4,11 @@ const User = require('../models/User');
 class AuthService {
     static async register(userData) {
         try {
+            // Validate required fields
+            if (!userData.email || !userData.password || !userData.username) {
+                throw new Error('Email, password, and username are required');
+            }
+
             // Set default values for new users
             const defaultUserData = {
                 ...userData,
@@ -33,7 +38,12 @@ class AuthService {
             return { user: userResponse, token };
         } catch (error) {
             if (error.name === 'SequelizeUniqueConstraintError') {
-                throw new Error('Email or username already exists');
+                if (error.errors[0].path === 'email') {
+                    throw new Error('Email already exists');
+                }
+                if (error.errors[0].path === 'username') {
+                    throw new Error('Username already exists');
+                }
             }
             throw error;
         }
@@ -41,10 +51,14 @@ class AuthService {
 
     static async login(email, password) {
         try {
+            if (!email || !password) {
+                throw new Error('Email and password are required');
+            }
+
             const user = await User.findOne({
                 where: { email },
                 attributes: {
-                    include: ['password'] // Temporarily include password for validation
+                    include: ['password']
                 }
             });
 
@@ -57,7 +71,14 @@ class AuthService {
                 throw new Error('Invalid credentials');
             }
 
+            if (!user.isActive) {
+                throw new Error('Account is deactivated');
+            }
+
             const token = this.generateToken(user);
+
+            // Update last login timestamp
+            await user.update({ lastLoginAt: new Date() });
 
             // Exclude password from response
             const userResponse = user.toJSON();
@@ -71,6 +92,10 @@ class AuthService {
     }
 
     static generateToken(user) {
+        if (!process.env.JWT_SECRET) {
+            throw new Error('JWT_SECRET is not defined');
+        }
+
         return jwt.sign(
             {
                 id: user.id,

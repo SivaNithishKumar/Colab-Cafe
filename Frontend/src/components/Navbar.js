@@ -140,6 +140,13 @@ const NavbarRight = styled.div`
   position: relative;
 `;
 
+const LogoImage = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  margin-right: 0.5rem;
+`;
+
 const Navbar = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -161,12 +168,16 @@ const Navbar = () => {
   return (
     <NavContainer>
       <Nav>
-        <NavLogo to="/">ProjectShowcase</NavLogo>
+        <NavLogo to="/">
+          <LogoImage src="/logo.png" alt="Logo" />
+          ProjectShowcase
+        </NavLogo>
         <MobileNavToggle onClick={handleMobileNavToggle}>
           ☰
         </MobileNavToggle>
         <NavLinks className={isMobileNavOpen ? 'active' : ''}>
           <li><NavLink to="/projects">Projects</NavLink></li>
+          <li><NavLink to="/teams">Teams</NavLink></li>
           <li><NavLink to="/categories">Categories</NavLink></li>
           <li><NavLink to="/about">About</NavLink></li>
           <NavbarRight>
@@ -180,7 +191,7 @@ const Navbar = () => {
                   <ProfileDropdown>
                     <ul>
                       <li>
-                        <Link to="/profile" onClick={() => setIsProfileDropdownOpen(false)}>
+                        <Link to={`/profile/${user.username}`} onClick={() => setIsProfileDropdownOpen(false)}>
                           My Profile
                         </Link>
                       </li>
@@ -208,12 +219,13 @@ const Navbar = () => {
           <div className="mobile-nav active">
             <ul className="mobile-nav-links">
               <li><NavLink to="/projects" onClick={handleMobileNavToggle}>Projects</NavLink></li>
+              <li><NavLink to="/teams" onClick={handleMobileNavToggle}>Teams</NavLink></li>
               <li><NavLink to="/categories" onClick={handleMobileNavToggle}>Categories</NavLink></li>
               <li><NavLink to="/about" onClick={handleMobileNavToggle}>About</NavLink></li>
               {user ? (
                 <>
                   <li>
-                    <Link to="/profile" onClick={handleMobileNavToggle}>
+                    <Link to={`/profile/${user.username}`} onClick={handleMobileNavToggle}>
                       My Profile
                     </Link>
                   </li>
