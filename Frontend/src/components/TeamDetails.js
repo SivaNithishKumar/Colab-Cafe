@@ -226,108 +226,108 @@ const EditButton = styled(Link)`
 `;
 
 const TeamDetails = () => {
-    const [team, setTeam] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const { id } = useParams();
-    const { user } = useAuth();
+  const [team, setTeam] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { id } = useParams();
+  const { user } = useAuth();
 
-    useEffect(() => {
-        fetchTeamDetails();
-    }, [id]);
+  useEffect(() => {
+    fetchTeamDetails();
+  }, [id]);
 
-    const fetchTeamDetails = async () => {
-        try {
-            setIsLoading(true);
-            const teamData = await teamsApi.getTeamById(id);
-            setTeam(teamData);
-        } catch (error) {
-            console.error('Error fetching team details:', error);
-            toast.error('Failed to load team details');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    if (isLoading) {
-        return <div>Loading team details...</div>;
+  const fetchTeamDetails = async () => {
+    try {
+      setIsLoading(true);
+      const teamData = await teamsApi.getTeamById(id);
+      setTeam(teamData);
+    } catch (error) {
+      console.error('Error fetching team details:', error);
+      toast.error('Failed to load team details');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    if (!team) {
-        return <div>Team not found</div>;
-    }
+  if (isLoading) {
+    return <div>Loading team details...</div>;
+  }
 
-    const isTeamLeader = user?.id === team.leader?.id;
+  if (!team) {
+    return <div>Team not found</div>;
+  }
 
-    return (
-        <TeamDetailsSection>
-            <Hero>
-                <TeamContent>
-                    <TeamHeader>
-                        <TeamName>{team.name}</TeamName>
-                        <TeamDescription>{team.description}</TeamDescription>
-                    </TeamHeader>
+  const isTeamLeader = user?.id === team.leader?.id;
 
-                    <TeamStats>
-                        <StatCard>
-                            <StatValue>{team.stats?.projectCount || 0}</StatValue>
-                            <StatLabel>Projects</StatLabel>
-                        </StatCard>
-                        <StatCard>
-                            <StatValue>{team.Users?.length || 0}</StatValue>
-                            <StatLabel>Members</StatLabel>
-                        </StatCard>
-                        <StatCard>
-                            <StatValue>{team.stats?.achievementCount || 0}</StatValue>
-                            <StatLabel>Achievements</StatLabel>
-                        </StatCard>
-                        <StatCard>
-                            <StatValue>{team.stats?.yearsActive || 0}</StatValue>
-                            <StatLabel>Years Active</StatLabel>
-                        </StatCard>
-                    </TeamStats>
+  return (
+    <TeamDetailsSection>
+      <Hero>
+        <TeamContent>
+          <TeamHeader>
+            <TeamName>{team.name}</TeamName>
+            <TeamDescription>{team.description}</TeamDescription>
+          </TeamHeader>
 
-                    <section>
-                        <SectionTitle>Team Members</SectionTitle>
-                        <MembersGrid>
-                            {team.Users?.map(member => (
-                                <MemberCard
-                                    key={member.id}
-                                    isLeader={member.id === team.leader?.id}
-                                >
-                                    <MemberAvatar src={member.avatar || '/default-avatar.png'} alt={member.username} />
-                                    <MemberName>{member.username}</MemberName>
-                                    <MemberRole>{member.TeamMember?.role || 'Member'}</MemberRole>
-                                </MemberCard>
-                            ))}
-                        </MembersGrid>
-                    </section>
+          <TeamStats>
+            <StatCard>
+              <StatValue>{team.stats?.projectCount || 0}</StatValue>
+              <StatLabel>Projects</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatValue>{team.members?.length || 0}</StatValue>
+              <StatLabel>Members</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatValue>{team.stats?.achievementCount || 0}</StatValue>
+              <StatLabel>Achievements</StatLabel>
+            </StatCard>
+            <StatCard>
+              <StatValue>{team.stats?.yearsActive || 0}</StatValue>
+              <StatLabel>Years Active</StatLabel>
+            </StatCard>
+          </TeamStats>
 
-                    <section>
-                        <SectionTitle>Team Projects</SectionTitle>
-                        <ProjectsGrid>
-                            {team.Projects?.map(project => (
-                                <ProjectCard to={`/project/${project.id}`} key={project.id}>
-                                    <ProjectTitle>{project.title}</ProjectTitle>
-                                    <ProjectDescription>{project.description}</ProjectDescription>
-                                    <TechTags>
-                                        {project.technologies?.map((tech, index) => (
-                                            <TechTag key={index}>{tech}</TechTag>
-                                        ))}
-                                    </TechTags>
-                                </ProjectCard>
-                            ))}
-                        </ProjectsGrid>
-                    </section>
-                </TeamContent>
-            </Hero>
+          <section>
+            <SectionTitle>Team Members</SectionTitle>
+            <MembersGrid>
+              {team.members?.map(member => (
+                <MemberCard
+                  key={member.id}
+                  isLeader={member.id === team.leader?.id}
+                >
+                  <MemberAvatar src={member.avatar || '/default-avatar.png'} alt={member.username} />
+                  <MemberName>{member.username}</MemberName>
+                  <MemberRole>{member.TeamMember?.role || 'Member'}</MemberRole>
+                </MemberCard>
+              ))}
+            </MembersGrid>
+          </section>
 
-            {isTeamLeader && (
-                <EditButton to={`/team/${team.id}/edit`}>
-                    Edit Team
-                </EditButton>
-            )}
-        </TeamDetailsSection>
-    );
+          <section>
+            <SectionTitle>Team Projects</SectionTitle>
+            <ProjectsGrid>
+              {team.projects?.map(project => (
+                <ProjectCard to={`/project/${project.id}`} key={project.id}>
+                  <ProjectTitle>{project.title}</ProjectTitle>
+                  <ProjectDescription>{project.description}</ProjectDescription>
+                  <TechTags>
+                    {project.technologies?.map((tech, index) => (
+                      <TechTag key={index}>{tech}</TechTag>
+                    ))}
+                  </TechTags>
+                </ProjectCard>
+              ))}
+            </ProjectsGrid>
+          </section>
+        </TeamContent>
+      </Hero>
+
+      {isTeamLeader && (
+        <EditButton to={`/team/${team.id}/edit`}>
+          Edit Team
+        </EditButton>
+      )}
+    </TeamDetailsSection>
+  );
 };
 
 export default TeamDetails; 

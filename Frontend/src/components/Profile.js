@@ -928,18 +928,19 @@ const Profile = () => {
   const [teams, setTeams] = useState([]);
 
   const fetchUserProfile = useCallback(async () => {
+    if (!username && !authUser?.username) return;
+
     try {
       setIsLoading(true);
+      setError(null);
       const response = await api.get(`/api/users/${username || authUser?.username}`);
       const userData = response.data;
       setUser(userData);
 
-      console.log('User ID:', userData.id); // Debug log
-
       setEditData({
         bio: userData.bio || '',
         title: userData.title || '',
-        skills: userData.skills || [],
+        skills: Array.isArray(userData.skills) ? userData.skills : [],
         socialLinks: userData.socialLinks || {
           github: '',
           linkedin: '',
@@ -948,37 +949,43 @@ const Profile = () => {
         }
       });
 
-      // Fetch only the projects created by this user
-      const projectsResponse = await projectsApi.getProjects();
-      console.log('All projects:', projectsResponse.projects); // Debug log
-
-      // Filter projects on the client side to ensure we only get this user's projects
-      const userProjects = projectsResponse.projects.filter(project => project.userId === userData.id);
-      console.log('Filtered user projects:', userProjects); // Debug log
-
-      setUserProjects(userProjects || []);
+      if (userData.id) {
+        const projectsResponse = await projectsApi.getProjects({ userId: userData.id });
+        const userProjects = Array.isArray(projectsResponse.projects)
+          ? projectsResponse.projects.filter(project => project.userId === userData.id)
+          : [];
+        setUserProjects(userProjects);
+      }
     } catch (error) {
       console.error('Error fetching profile:', error);
       setError('Failed to load profile');
+      toast.error('Failed to load profile. Please try again later.');
     } finally {
       setIsLoading(false);
     }
   }, [username, authUser?.username]);
 
-  const fetchUserTeams = async () => {
+  const fetchUserTeams = useCallback(async () => {
+    if (!user?.id) return;
+
     try {
       const teamsData = await teamsApi.getUserTeams();
-      setTeams(teamsData);
+      setTeams(Array.isArray(teamsData) ? teamsData : []);
     } catch (error) {
       console.error('Error fetching user teams:', error);
-      toast.error('Failed to load teams');
+      toast.error('Failed to load teams. Please try again later.');
     }
-  };
+  }, [user?.id]);
 
   useEffect(() => {
     fetchUserProfile();
-    fetchUserTeams();
-  }, [fetchUserProfile, fetchUserTeams]);
+  }, [fetchUserProfile]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchUserTeams();
+    }
+  }, [user?.id, fetchUserTeams]);
 
   const handleEdit = () => {
     setIsEditing(true);

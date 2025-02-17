@@ -4,6 +4,7 @@ const teamService = require('../services/teamService');
 const auth = require('../middlewares/auth');
 const { validate } = require('../middlewares/validation');
 const { body } = require('express-validator');
+const { ApiError } = require('../utils/ApiError');
 
 // Validation middleware
 const teamValidation = {
@@ -135,6 +136,9 @@ router.get('/user/teams',
     auth,
     async (req, res, next) => {
         try {
+            if (!req.user || !req.user.id) {
+                throw new ApiError(401, 'User not authenticated');
+            }
             const teams = await teamService.getUserTeams(req.user.id);
             res.json(teams);
         } catch (error) {

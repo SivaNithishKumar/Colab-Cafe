@@ -28,10 +28,12 @@ class ProjectService {
         const include = [
             {
                 model: User,
+                as: 'creator',
                 attributes: ['id', 'username', 'avatar']
             },
             {
                 model: Team,
+                as: 'team',
                 attributes: ['id', 'name', 'avatar']
             }
         ];
@@ -64,10 +66,12 @@ class ProjectService {
             include: [
                 {
                     model: User,
+                    as: 'creator',
                     attributes: ['id', 'username', 'avatar']
                 },
                 {
                     model: Team,
+                    as: 'team',
                     attributes: ['id', 'name', 'avatar'],
                     include: [{
                         model: User,
@@ -87,7 +91,10 @@ class ProjectService {
 
     async updateProject(projectId, updateData, userId) {
         const project = await Project.findByPk(projectId, {
-            include: [{ model: Team }]
+            include: [{
+                model: Team,
+                as: 'team'
+            }]
         });
 
         if (!project) {
@@ -95,9 +102,9 @@ class ProjectService {
         }
 
         // Check if user has permission to update
-        if (project.isTeamProject && project.Team) {
+        if (project.isTeamProject && project.team) {
             const teamMember = await TeamMember.findOne({
-                where: { teamId: project.Team.id, userId }
+                where: { teamId: project.team.id, userId }
             });
 
             if (!teamMember || (teamMember.role !== 'leader' && teamMember.role !== 'admin')) {
@@ -113,7 +120,10 @@ class ProjectService {
 
     async deleteProject(projectId, userId) {
         const project = await Project.findByPk(projectId, {
-            include: [{ model: Team }]
+            include: [{
+                model: Team,
+                as: 'team'
+            }]
         });
 
         if (!project) {
@@ -121,9 +131,9 @@ class ProjectService {
         }
 
         // Check if user has permission to delete
-        if (project.isTeamProject && project.Team) {
+        if (project.isTeamProject && project.team) {
             const teamMember = await TeamMember.findOne({
-                where: { teamId: project.Team.id, userId }
+                where: { teamId: project.team.id, userId }
             });
 
             if (!teamMember || teamMember.role !== 'leader') {

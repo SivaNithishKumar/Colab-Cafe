@@ -5,98 +5,112 @@ const Project = require('./Project');
 const Comment = require('./Comment');
 const Team = require('./Team');
 const TeamMember = require('./TeamMember');
+const UserFollows = require('./UserFollows');
 
-// Define the UserFollows model for the through table
-const UserFollows = sequelize.define('UserFollows', {
-    followerId: {
-        type: DataTypes.UUID,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    },
-    followingId: {
-        type: DataTypes.UUID,
-        references: {
-            model: User,
-            key: 'id'
-        }
-    }
-});
-
-// User follow/following associations
+// User follows associations
 User.belongsToMany(User, {
     through: UserFollows,
     as: 'followers',
-    foreignKey: 'followingId',
-    otherKey: 'followerId'
+    foreignKey: 'following_id',
+    otherKey: 'follower_id'
 });
 
 User.belongsToMany(User, {
     through: UserFollows,
     as: 'following',
-    foreignKey: 'followerId',
-    otherKey: 'followingId'
+    foreignKey: 'follower_id',
+    otherKey: 'following_id'
 });
 
-// Project associations
-User.hasMany(Project, {
-    foreignKey: 'userId',
-    as: 'projects',
+// Team associations
+Team.belongsTo(User, {
+    as: 'leader',
+    foreignKey: 'leaderId',
     onDelete: 'CASCADE'
 });
 
+User.hasMany(Team, {
+    as: 'ledTeams',
+    foreignKey: 'leaderId',
+    onDelete: 'CASCADE'
+});
+
+// Team-User many-to-many relationship through TeamMember
+Team.belongsToMany(User, {
+    through: TeamMember,
+    foreignKey: 'teamId',
+    otherKey: 'userId',
+    as: 'members'
+});
+
+User.belongsToMany(Team, {
+    through: TeamMember,
+    foreignKey: 'userId',
+    otherKey: 'teamId',
+    as: 'teams'
+});
+
+// TeamMember associations
+TeamMember.belongsTo(Team, { foreignKey: 'teamId', as: 'team' });
+TeamMember.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+// Project associations
 Project.belongsTo(User, {
     foreignKey: 'userId',
-    as: 'user'
+    onDelete: 'CASCADE',
+    as: 'creator'
+});
+
+Project.belongsTo(Team, {
+    foreignKey: 'teamId',
+    onDelete: 'SET NULL',
+    allowNull: true,
+    as: 'team'
+});
+
+Team.hasMany(Project, {
+    foreignKey: 'teamId',
+    as: 'projects'
+});
+
+User.hasMany(Project, {
+    foreignKey: 'userId',
+    as: 'projects'
 });
 
 // Comment associations
-User.hasMany(Comment, {
-    foreignKey: 'userId',
-    as: 'comments',
-    onDelete: 'CASCADE'
-});
-
 Comment.belongsTo(User, {
     foreignKey: 'userId',
-    as: 'user'
-});
-
-Project.hasMany(Comment, {
-    foreignKey: 'projectId',
-    as: 'comments',
     onDelete: 'CASCADE'
 });
 
 Comment.belongsTo(Project, {
     foreignKey: 'projectId',
-    as: 'project'
+    onDelete: 'CASCADE'
 });
 
-// Team Relationships
-User.hasMany(Team, { foreignKey: 'leaderId', as: 'ledTeams' });
-Team.belongsTo(User, { foreignKey: 'leaderId', as: 'leader' });
+Project.hasMany(Comment, {
+    foreignKey: 'projectId',
+    as: 'comments'
+});
 
-// Team-Project Relationship
-Team.hasMany(Project, { foreignKey: 'teamId' });
-Project.belongsTo(Team, { foreignKey: 'teamId' });
+User.hasMany(Comment, {
+    foreignKey: 'userId',
+    as: 'comments'
+});
 
-// Team-Member Relationships (Many-to-Many)
-User.belongsToMany(Team, { through: TeamMember, foreignKey: 'userId' });
-Team.belongsToMany(User, { through: TeamMember, foreignKey: 'teamId' });
+// Sync models with database
+sequelize.sync({ alter: true }).catch(err => {
+    console.error('Error syncing database:', err);
+});
 
-// Additional associations for easy access
-Team.hasMany(TeamMember);
-TeamMember.belongsTo(Team);
-User.hasMany(TeamMember);
-TeamMember.belongsTo(User);
-
+// Export models
 module.exports = {
+    sequelize,
     User,
     Project,
     Comment,
-    UserFollows,
     Team,
-    TeamMember
+    TeamMember,
+    UserFollows
 };

@@ -152,69 +152,69 @@ const FloatingActionButton = styled(Link)`
 `;
 
 const Teams = () => {
-    const [teams, setTeams] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const { user } = useAuth();
+  const [teams, setTeams] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
-    useEffect(() => {
-        fetchTeams();
-    }, []);
+  useEffect(() => {
+    fetchTeams();
+  }, []);
 
-    const fetchTeams = async () => {
-        try {
-            setIsLoading(true);
-            const response = await teamsApi.getUserTeams();
-            setTeams(response);
-        } catch (error) {
-            console.error('Error fetching teams:', error);
-            toast.error('Failed to load teams');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    if (isLoading) {
-        return <div>Loading teams...</div>;
+  const fetchTeams = async () => {
+    try {
+      setIsLoading(true);
+      const response = await teamsApi.getUserTeams();
+      setTeams(response);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+      toast.error('Failed to load teams');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    return (
-        <TeamsSection>
-            <Hero>
-                <HeroContent>
-                    <HeroTitle>My Teams</HeroTitle>
-                    <p>Collaborate with talented developers and create amazing projects together</p>
-                </HeroContent>
-            </Hero>
+  if (isLoading) {
+    return <div>Loading teams...</div>;
+  }
 
-            <TeamsGrid>
-                {teams.map(team => (
-                    <Link to={`/team/${team.id}`} key={team.id} style={{ textDecoration: 'none' }}>
-                        <TeamCard>
-                            <TeamHeader>
-                                <TeamAvatar src={team.avatar || '/default-team.png'} alt={team.name} />
-                                <TeamName>{team.name}</TeamName>
-                                <TeamDescription>{team.description}</TeamDescription>
-                            </TeamHeader>
-                            <TeamStats>
-                                <StatItem>
-                                    <StatValue>{team.stats?.projectCount || 0}</StatValue>
-                                    <StatLabel>Projects</StatLabel>
-                                </StatItem>
-                                <StatItem>
-                                    <StatValue>{team.stats?.memberCount || 0}</StatValue>
-                                    <StatLabel>Members</StatLabel>
-                                </StatItem>
-                            </TeamStats>
-                        </TeamCard>
-                    </Link>
-                ))}
-            </TeamsGrid>
+  return (
+    <TeamsSection>
+      <Hero>
+        <HeroContent>
+          <HeroTitle>My Teams</HeroTitle>
+          <p>Collaborate with talented developers and create amazing projects together</p>
+        </HeroContent>
+      </Hero>
 
-            <FloatingActionButton to="/team/create" title="Create New Team">
-                +
-            </FloatingActionButton>
-        </TeamsSection>
-    );
+      <TeamsGrid>
+        {teams.map(team => (
+          <Link to={`/team/${team.id}`} key={team.id} style={{ textDecoration: 'none' }}>
+            <TeamCard>
+              <TeamHeader>
+                <TeamAvatar src={team.avatar || '/default-team.png'} alt={team.name} />
+                <TeamName>{team.name}</TeamName>
+                <TeamDescription>{team.description}</TeamDescription>
+              </TeamHeader>
+              <TeamStats>
+                <StatItem>
+                  <StatValue>{team.stats?.projectCount || 0}</StatValue>
+                  <StatLabel>Projects</StatLabel>
+                </StatItem>
+                <StatItem>
+                  <StatValue>{team.stats?.memberCount || 0}</StatValue>
+                  <StatLabel>Members</StatLabel>
+                </StatItem>
+              </TeamStats>
+            </TeamCard>
+          </Link>
+        ))}
+      </TeamsGrid>
+
+      <FloatingActionButton to="/team/create" title="Create New Team">
+        +
+      </FloatingActionButton>
+    </TeamsSection>
+  );
 };
 
 export default Teams; 

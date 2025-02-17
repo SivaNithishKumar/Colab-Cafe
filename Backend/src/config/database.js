@@ -15,6 +15,12 @@ const sequelize = new Sequelize(
             min: 0,
             acquire: 30000,
             idle: 10000
+        },
+        define: {
+            timestamps: true,
+            underscored: true,
+            underscoredAll: true,
+            freezeTableName: true
         }
     }
 );
@@ -29,4 +35,22 @@ const testConnection = async () => {
     }
 };
 
-module.exports = { sequelize, testConnection };
+const initializeDatabase = async () => {
+    try {
+        await testConnection();
+
+        // Import models
+        const models = require('../models');
+
+        // Sync all models
+        await sequelize.sync({ alter: false });
+        console.log('All models were synchronized successfully.');
+
+        return models;
+    } catch (error) {
+        console.error('Database initialization failed:', error);
+        process.exit(1);
+    }
+};
+
+module.exports = { sequelize, testConnection, initializeDatabase };

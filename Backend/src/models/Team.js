@@ -19,6 +19,7 @@ const Team = sequelize.define('Team', {
     leaderId: {
         type: DataTypes.UUID,
         allowNull: false,
+        field: 'leader_id',
         references: {
             model: 'Users',
             key: 'id'
@@ -76,12 +77,18 @@ const Team = sequelize.define('Team', {
     },
     createdAt: {
         type: DataTypes.DATE,
+        field: 'created_at',
         defaultValue: DataTypes.NOW
     },
     updatedAt: {
         type: DataTypes.DATE,
+        field: 'updated_at',
         defaultValue: DataTypes.NOW
     }
+}, {
+    tableName: 'teams',
+    timestamps: true,
+    underscored: true
 });
 
 module.exports = Team; 
